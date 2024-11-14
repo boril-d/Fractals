@@ -38,7 +38,6 @@ public class GUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1024, 576));
         setSize(new java.awt.Dimension(1024, 576));
-        getContentPane().add(canvas, java.awt.BorderLayout.CENTER);
 
         btnRender.setActionCommand("Render");
         btnRender.setLabel("Render");
@@ -47,8 +46,21 @@ public class GUI extends javax.swing.JFrame {
                 btnRenderActionPerformed(evt);
             }
         });
-        getContentPane().add(btnRender, java.awt.BorderLayout.PAGE_END);
-        btnRender.getAccessibleContext().setAccessibleName("Render");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(canvas, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnRender, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(canvas, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btnRender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -62,10 +74,8 @@ public class GUI extends javax.swing.JFrame {
         BufferedImage texture = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         
         for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                ComplexNumber c = new ComplexNumber(x, y);
-                
-                texture.setRGB(x, y, test(c).getRGB());
+            for (int x = 0; x < width; x++) {                
+                texture.setRGB(x, y, foregroundColor.getRGB());
             }
         }
         
