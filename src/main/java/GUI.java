@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 
 /**
  *
- * @author borilad
+ * @author boril.d
  */
 public class GUI extends javax.swing.JFrame {
 
