@@ -2,6 +2,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.HashSet;
 
 
 
@@ -32,15 +33,16 @@ public class GUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        canvas = new java.awt.Canvas();
-        btnRender = new java.awt.Button();
+        cnvFractal = new java.awt.Canvas();
+        btnRender = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1024, 576));
+        setMinimumSize(new java.awt.Dimension(512, 288));
+        setName("frmMain"); // NOI18N
         setSize(new java.awt.Dimension(1024, 576));
 
-        btnRender.setActionCommand("Render");
-        btnRender.setLabel("Render");
+        btnRender.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        btnRender.setText("Render");
         btnRender.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRenderActionPerformed(evt);
@@ -51,35 +53,37 @@ public class GUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(canvas, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnRender, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnRender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(cnvFractal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(canvas, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(btnRender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(cnvFractal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRender, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRenderActionPerformed
-        int width = canvas.getWidth();
-        int height = canvas.getHeight();
-                
-        Graphics graphics = canvas.getGraphics();
+        Graphics graphics = cnvFractal.getGraphics();
         
-        BufferedImage texture = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        int imgW = cnvFractal.getWidth();
+        int imgH = cnvFractal.getHeight();
         
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {                
-                texture.setRGB(x, y, foregroundColor.getRGB());
+        int imgType = BufferedImage.TYPE_INT_ARGB;
+        
+        BufferedImage image = new BufferedImage(imgW, imgH, imgType);
+        
+        for (int y = 0; y < imgH; y++) {
+            for (int x = 0; x < imgW; x++) {
+                image.setRGB(x, y, foregroundColor.getRGB());
             }
         }
         
-        graphics.drawImage(texture, 0, 0, null);
+        graphics.drawImage(image, 0, 0, null);
     }//GEN-LAST:event_btnRenderActionPerformed
 
     /**
@@ -120,7 +124,7 @@ public class GUI extends javax.swing.JFrame {
     private static final Color foregroundColor = new Color(100, 200, 200);
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Button btnRender;
-    private java.awt.Canvas canvas;
+    private javax.swing.JButton btnRender;
+    private java.awt.Canvas cnvFractal;
     // End of variables declaration//GEN-END:variables
 }
