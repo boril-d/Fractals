@@ -282,6 +282,8 @@ public final class Colormap {
                 result += ch - '0';
             } else if ('a' <= ch && ch <= 'f') {
                 result += ch - 'a' + 10;
+            } else if ('A' <= ch && ch <= 'F') {
+                result += ch - 'A' + 10;
             } else {
                 throw new IllegalArgumentException(
                     "'hexStr' contains a character which is not a hexadecimal digit."
