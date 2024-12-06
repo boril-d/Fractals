@@ -16,4 +16,4 @@ nb-configuration.xml
 *.ear
 /target/
 
-/.gradle/7.0/executionHistory/
+/.gradle/
