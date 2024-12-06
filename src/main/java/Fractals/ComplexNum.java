@@ -2,10 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+package Fractals;
 
 /**
  *
- * @author Gate
+ * @author bilyana-kr 
  */
 public class ComplexNum {
      private double x;
@@ -80,5 +81,4 @@ public class ComplexNum {
             return result;
         }
     }
-
 }

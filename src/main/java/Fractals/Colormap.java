@@ -1,11 +1,14 @@
-
-package com.mycompany.fractals;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Fractals;
 
 import java.awt.Color;
 
 /**
  *
- * @author boril.d
+ * @author boril-d
  */
 public final class Colormap {
     public static final int ALPHA = 0;
