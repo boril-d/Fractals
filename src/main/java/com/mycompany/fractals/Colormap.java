@@ -19,7 +19,7 @@ public final class Colormap {
     public static final char COLOR_END_CHAR = ' ';
     public static final char COLORMAP_END_CHAR = '\n';
 
-    public static int shiftVal(int valType) {
+    public static int shiftVal(int valType) throws IllegalArgumentException {
         ensureValidType(valType);
         
         final int STORAGE_SIZE = VALS_CNT * VALS_SIZE;
@@ -27,7 +27,7 @@ public final class Colormap {
         
         return STORAGE_SIZE - BITS_FROM_BEGIN;
     }
-    public static int bitmaskVal(int valType) {
+    public static int bitmaskVal(int valType) throws IllegalArgumentException {
         ensureValidType(valType);
         
         final int SHIFT = shiftVal(valType);
@@ -36,12 +36,12 @@ public final class Colormap {
         return (int)(BITMASK << SHIFT);
     }
 
-    public static byte colorVal(int valType, int color) {
+    public static byte colorVal(int valType, int color) throws IllegalArgumentException {
         ensureValidType(valType);
                 
         return (byte)( (bitWiden(color) & bitmaskVal(valType)) >> shiftVal(valType) );
     }
-    public static int colorVal(int valType, int color, byte val) {
+    public static int colorVal(int valType, int color, byte val) throws IllegalArgumentException {
         ensureValidType(valType);
         
         final int COLOR_WITH_BLANK_VAL = color & ~bitmaskVal(valType);
@@ -67,7 +67,7 @@ public final class Colormap {
         
         return str.toString();
     }
-    public static int stringToColor(String str) {
+    public static int stringToColor(String str) throws IllegalArgumentException {
         ensureValidStr(str);
         
         int begI = 0;
@@ -81,36 +81,33 @@ public final class Colormap {
         }
         int result = 0;
         int idx = begI;
-        try {
-            result = colorVal(RED  , result, hexStrToVal(str, idx, idx += 2));
-            result = colorVal(GREEN, result, hexStrToVal(str, idx, idx += 2));
-            result = colorVal(BLUE , result, hexStrToVal(str, idx, idx += 2));
-            if (str.length() - begI == 8) {
-                result = colorVal(ALPHA, result, hexStrToVal(str, idx, idx + 2));
-            }
-            return result;
-        } catch (IllegalArgumentException err) {
-            throw err;
+        
+        result = colorVal(RED  , result, hexStrToVal(str, idx, idx += 2));
+        result = colorVal(GREEN, result, hexStrToVal(str, idx, idx += 2));
+        result = colorVal(BLUE , result, hexStrToVal(str, idx, idx += 2));
+        if (str.length() - begI == 8) {
+            result = colorVal(ALPHA, result, hexStrToVal(str, idx, idx + 2));
         }
+        return result;
     }
 
     public Colormap() {
         set();
     }
-    public Colormap(int[] colors) {
+    public Colormap(int[] colors) throws IllegalArgumentException {
         set(colors);
     }
-    public Colormap(Color[] colors) {
+    public Colormap(Color[] colors) throws IllegalArgumentException {
         set(colors);
     }
-    public Colormap(String[] colors) {
+    public Colormap(String[] colors) throws IllegalArgumentException {
         set(colors);
     }
 
     public void set() {
         colors = null;
     }
-    public void set(int[] colors) {
+    public void set(int[] colors) throws IllegalArgumentException {
         ensureValidColors(colors);
         
         this.colors = new int[colors.length];
@@ -118,7 +115,7 @@ public final class Colormap {
             this.colors[i] = colors[i];
         }
     }
-    public void set(Color[] colors) {
+    public void set(Color[] colors) throws IllegalArgumentException {
         ensureValidColors(colors);
         
         this.colors = new int[colors.length];
@@ -126,7 +123,7 @@ public final class Colormap {
             this.colors[i] = colors[i].getRGB();
         }
     }
-    public void set(String[] colors) {
+    public void set(String[] colors) throws IllegalArgumentException {
         ensureValidColors(colors);
         
         this.colors = new int[colors.length];
@@ -141,7 +138,7 @@ public final class Colormap {
         }
         return colors.length;
     }
-    public int color(int index) {
+    public int color(int index) throws IllegalArgumentException {
         if (colors == null) {
             return 0;
         }
@@ -150,7 +147,7 @@ public final class Colormap {
         }
         return colors[index];
     }
-    public int color(double val) {
+    public int color(double val) throws IllegalArgumentException {
         if (colors == null) {
             return 0;
         }
@@ -200,12 +197,12 @@ public final class Colormap {
     }
 
 
-    private static void ensureValidType(int type) {
+    private static void ensureValidType(int type) throws IllegalArgumentException {
         if (type < 0 || VALS_CNT <= type) {
             throw new IllegalArgumentException("'type' is not a valid type.");
         }
     }
-    private static void ensureValidStr(String str) {
+    private static void ensureValidStr(String str) throws IllegalArgumentException {
         if (str == null) {
             throw new IllegalArgumentException("'str' was null.");
         }
@@ -213,7 +210,7 @@ public final class Colormap {
             throw new IllegalArgumentException("'str' has an invalid length.");
         }
     }
-    private static void ensureValidColors(int[] colors) {
+    private static void ensureValidColors(int[] colors) throws IllegalArgumentException {
         if (colors == null) {
             throw new IllegalArgumentException("'colors' was null.");
         }
@@ -221,7 +218,7 @@ public final class Colormap {
             throw new IllegalArgumentException("'colors' has an invalid length.");
         }
     }
-    private static void ensureValidColors(Object[] colors) {
+    private static void ensureValidColors(Object[] colors) throws IllegalArgumentException {
         if (colors == null) {
             throw new IllegalArgumentException("'colors' was null.");
         }
@@ -273,7 +270,7 @@ public final class Colormap {
         str.reverse();
         return str.toString();
     }
-    private static byte hexStrToVal(String hexStr, int begI, int endI) {
+    private static byte hexStrToVal(String hexStr, int begI, int endI) throws IllegalArgumentException {
         int result = 0;
         for (int i = begI; i != endI; i++) {
             result *= 16;
@@ -292,6 +289,7 @@ public final class Colormap {
         }
         return (byte)(result);
     }
+
 
     private int[] colors;
 }
