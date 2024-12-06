@@ -12,6 +12,8 @@ public class Fractals {
             /* green color: */ 0xff00ff00,
             /* blue color:  */ 0xff0000ff,
         };
+        System.out.println("Testing git");
+        
         Colormap clrmap = new Colormap();
         clrmap.set(clrs);
         System.out.println(clrmap.colorsCount());
