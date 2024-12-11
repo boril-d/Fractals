@@ -69,7 +69,7 @@ public class ComplexNum {
         
         boolean isNegative = false;
         
-        if (power < -1) {
+        if (power < 0) {
             isNegative = true;
             power = -power;
         }
@@ -82,5 +82,10 @@ public class ComplexNum {
         } else{
             return result;
         }
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("real: %f, imag: %f;", x, y);
     }
 }

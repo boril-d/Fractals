@@ -106,9 +106,13 @@ public final class Colormap {
     public Colormap(String[] colors) throws IllegalArgumentException {
         set(colors);
     }
-
+    public Colormap(Colormap other) {
+        set(other);
+    }
+    
     public void set() {
-        colors = null;
+        colors = new int[1];
+        colors[0] = 0x00000000;
     }
     public void set(int[] colors) throws IllegalArgumentException {
         ensureValidColors(colors);
@@ -134,26 +138,23 @@ public final class Colormap {
             this.colors[i] = stringToColor(colors[i]);
         }
     }
+    public void set(Colormap other) {
+        colors = new int[other.colors.length];
+        for (int i = 0; i < colors.length; i++) {
+            colors[i] = other.colors[i];
+        }
+    }
 
     public int colorsCount() {
-        if (colors == null) {
-            return 0;
-        }
         return colors.length;
     }
     public int color(int index) throws IllegalArgumentException {
-        if (colors == null) {
-            return 0;
-        }
         if (colors.length <= index) {
             throw new IllegalArgumentException("'index' out of range.");
         }
         return colors[index];
     }
     public int color(double val) throws IllegalArgumentException {
-        if (colors == null) {
-            return 0;
-        }
         if (val < 0.0 || 1.0 < val) {
             throw new IllegalArgumentException("'val' out of range.");
         }
@@ -183,11 +184,7 @@ public final class Colormap {
         return resultColor;
     }
 
-    @Override public String toString() {
-        if (colors == null) {
-            return "";
-        }
-        
+    @Override public String toString() {        
         StringBuilder str = new StringBuilder();
         
         str.append(colorToString(colors[0]));
