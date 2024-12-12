@@ -20,8 +20,20 @@ public final class Colormap {
 
     public static final char COLOR_BEG_CHAR = '#';
     public static final char COLOR_END_CHAR = ' ';
-    public static final char COLORMAP_END_CHAR = '\n';
 
+    /**
+     * @brief Gets the shift value for a specific value in the integer
+     * representation of a color.
+     * 
+     * @param valType The type of value to be retrieved - `ALPHA`, `RED`,
+     * `GREEN` or `BLUE`.
+     * 
+     * @return The count of bits you need to shift the color value with in order
+     * to be able to insert it in the proper position.
+     * 
+     * @throws IllegalArgumentException if `valType` is other than `ALPHA`,
+     * `RED`, `GREEN` or `BLUE`.
+     */
     public static int shiftVal(int valType) throws IllegalArgumentException {
         ensureValidType(valType);
         
@@ -30,6 +42,18 @@ public final class Colormap {
         
         return STORAGE_SIZE - BITS_FROM_BEGIN;
     }
+    /**
+     * @brief Gets the bitmask value for a specific value in the integer
+     * representation of a color.
+     * 
+     * @param valType The type of value to be retrieved - `ALPHA`, `RED`,
+     * `GREEN` or `BLUE`.
+     * 
+     * @return The bitmask value for the specified color value type.
+     * 
+     * @throws IllegalArgumentException if `valType` is other than `ALPHA`,
+     * `RED`, `GREEN` or `BLUE`.
+     */
     public static int bitmaskVal(int valType) throws IllegalArgumentException {
         ensureValidType(valType);
         
@@ -39,11 +63,38 @@ public final class Colormap {
         return (int)(BITMASK << SHIFT);
     }
 
+    /**
+     * @brief Retrieves information about a color stored in an integer.
+     * 
+     * @param valType The type of value to be retrieved - `ALPHA`, `RED`,
+     * `GREEN` or `BLUE`.
+     * @param color A color stored in an integer in format `0xAARRGGBB` where
+     * each byte stores `ALPHA`, `RED`, `GREEN` and `BLUE` respectively.
+     * 
+     * @return The retrieved color value.
+     * 
+     * @throws IllegalArgumentException if `valType` is other than `ALPHA`,
+     * `RED`, `GREEN` or `BLUE`.
+     */
     public static byte colorVal(int valType, int color) throws IllegalArgumentException {
         ensureValidType(valType);
                 
         return (byte)( (bitWiden(color) & bitmaskVal(valType)) >> shiftVal(valType) );
     }
+    /**
+     * @brief Encodes a color value into a color stored in an integer.
+     * 
+     * @param valType The type of value to be encoded - `ALPHA`, `RED`, `GREEN`
+     * or `BLUE`.
+     * @param color A color stored in an integer in format `0xAARRGGBB` where
+     * each byte stores `ALPHA`, `RED`, `GREEN` and `BLUE` respectively.
+     * @param val The value to be encoded in `color`.
+     * 
+     * @return The modified `color` value.
+     * 
+     * @throws IllegalArgumentException if `valType` is other than `ALPHA`,
+     * `RED`, `GREEN` or `BLUE`.
+     */
     public static int colorVal(int valType, int color, byte val) throws IllegalArgumentException {
         ensureValidType(valType);
         
@@ -52,6 +103,17 @@ public final class Colormap {
         return (int)(COLOR_WITH_BLANK_VAL | (bitWiden(val) << shiftVal(valType)));
     }
 
+    /**
+     * @brief Converts a color value stored in an integer to string.
+     * 
+     * @param color A color stored in an integer in format `0xAARRGGBB` where
+     * each byte stores `ALPHA`, `RED`, `GREEN` and `BLUE` respectively.
+     * 
+     * @return The string value of the color which is `#RRGGBB` if the `ALPHA`
+     * value is `255` or `#RRGGBBAA` if the `ALPHA` value is different than
+     * `255`. `RRGGBBAA` are all hexadecimal digits (capital letters `ABCDEF`
+     * are used for digit values from 10 to 15).
+     */
     public static String colorToString(int color) {
         StringBuilder str = new StringBuilder();
         str.append(COLOR_BEG_CHAR);
@@ -70,6 +132,20 @@ public final class Colormap {
         
         return str.toString();
     }
+    /**
+     * @brief Converts a string into a color encoded in an integer.
+     * 
+     * @param str The string value of a color. It can optionally begin with `#`.
+     * Then it is followed by 8 hexadecimal digits for color values `RED`,
+     * `GREEN`, `BLUE` and `ALPHA`. If `ALPHA` is equal to `255`, then the last
+     * 2 hexadecimal digits can be omitted.
+     * 
+     * @return An integer value of the color in format `0xAARRGGBB` where each
+     * byte stores `ALPHA`, `RED`, `GREEN` and `BLUE` respectively.
+     * 
+     * @throws IllegalArgumentException if any of the rules mentioned in the
+     * parameter description of `str` are not followed.
+     */
     public static int stringToColor(String str) throws IllegalArgumentException {
         ensureValidStr(str);
         
@@ -148,15 +224,30 @@ public final class Colormap {
     public int colorsCount() {
         return colors.length;
     }
-    public int color(int index) throws IllegalArgumentException {
+    public int color(int index) throws IndexOutOfBoundsException {
         if (colors.length <= index) {
-            throw new IllegalArgumentException("'index' out of range.");
+            throw new IndexOutOfBoundsException("'index' out of range.");
         }
         return colors[index];
     }
-    public int color(double val) throws IllegalArgumentException {
+    /**
+     * @brief Uses the colormap to blend a color based on its position from `0`
+     * to `1`.
+     * 
+     * For example if the colormap contains `#ff0000` and `#00ff00` which are
+     * the colors red and green and a value of `0.5` is passed, then `#888800`
+     * is returned which is dark yellow.
+     * 
+     * @param val A double value in the range `[0..1]`.
+     * 
+     * @return A color which is a mixture from the 2 colors around it.
+     * @throws IndexOutOfBoundsException 
+     */
+    public int color(double val) throws IndexOutOfBoundsException {
         if (val < 0.0 || 1.0 < val) {
-            throw new IllegalArgumentException("'val' out of range.");
+            throw new IndexOutOfBoundsException(
+                    "`val` must be a value in the range `[0..1]`."
+            );
         }
         val *= colors.length - 1;
         
@@ -199,31 +290,31 @@ public final class Colormap {
 
     private static void ensureValidType(int type) throws IllegalArgumentException {
         if (type < 0 || VALS_CNT <= type) {
-            throw new IllegalArgumentException("'type' is not a valid type.");
+            throw new IllegalArgumentException("`type` is not a valid type.");
         }
     }
     private static void ensureValidStr(String str) throws IllegalArgumentException {
         if (str == null) {
-            throw new IllegalArgumentException("'str' was null.");
+            throw new IllegalArgumentException("`str` was null.");
         }
         if (str.length() <= 0) {
-            throw new IllegalArgumentException("'str' has an invalid length.");
+            throw new IllegalArgumentException("`str` has an invalid length.");
         }
     }
     private static void ensureValidColors(int[] colors) throws IllegalArgumentException {
         if (colors == null) {
-            throw new IllegalArgumentException("'colors' was null.");
+            throw new IllegalArgumentException("`colors` was null.");
         }
         if (colors.length <= 0) {
-            throw new IllegalArgumentException("'colors' has an invalid length.");
+            throw new IllegalArgumentException("`colors` has an invalid length.");
         }
     }
     private static void ensureValidColors(Object[] colors) throws IllegalArgumentException {
         if (colors == null) {
-            throw new IllegalArgumentException("'colors' was null.");
+            throw new IllegalArgumentException("`colors` was null.");
         }
         if (colors.length <= 0) {
-            throw new IllegalArgumentException("'colors' has an invalid length.");
+            throw new IllegalArgumentException("`colors` has an invalid length.");
         }
     }
 
@@ -259,7 +350,7 @@ public final class Colormap {
             if (0 <= digit && digit < 10) {
                 str.append((char)('0' + digit));
             } else {
-                str.append((char)('a' + digit - 10));
+                str.append((char)('A' + digit - 10));
             }
         } while (wideVal != 0);
         
