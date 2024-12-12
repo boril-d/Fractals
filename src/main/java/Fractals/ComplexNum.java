@@ -86,6 +86,6 @@ public class ComplexNum {
     
     @Override
     public String toString() {
-        return String.format("real: %f, imag: %f;", x, y);
+        return String.format("real: %f imag: %f", x, y);
     }
 }

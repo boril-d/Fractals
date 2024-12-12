@@ -147,7 +147,7 @@ public class FractalOptions {
     @Override
     public String toString() {
         return String.format(
-                "bound: %f, precision: %d, colormap: {%s}, power: %d, c: {%s}, z(0): {%s};",
+                "bound: %f precision: %d colormap: {%s} power: %d c: {%s} z(0): {%s}",
                 bound, precision, colormap.toString(), power, c.toString(), z0.toString()
         );
     }
