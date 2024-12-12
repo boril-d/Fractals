@@ -47,7 +47,7 @@ public class FractalOptions {
     /*
      * All of the following fields are parts of the formula:
      * z(0) = z0;
-     * z(i) = ComplexNum.power(z(i - 1), power) + c;
+     * z(i) = ComplexNum.sum( ComplexNum.power(z(i - 1), power), c );
      */
     
     private int power;
