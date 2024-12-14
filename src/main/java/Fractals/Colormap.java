@@ -158,7 +158,7 @@ public final class Colormap {
                 "'str' contains the wrong number of hexadecimal digits."
             );
         }
-        int result = 0;
+        int result = 0xff000000;
         int idx = begI;
         
         result = colorVal(RED  , result, hexStrToVal(str, idx, idx += 2));
@@ -193,10 +193,7 @@ public final class Colormap {
     public void set(int[] colors) throws IllegalArgumentException {
         ensureValidColors(colors);
         
-        this.colors = new int[colors.length];
-        for (int i = 0; i < colors.length; i++) {
-            this.colors[i] = colors[i];
-        }
+        this.colors = colors;
     }
     public void set(Color[] colors) throws IllegalArgumentException {
         ensureValidColors(colors);

@@ -4,6 +4,13 @@
  */
 package Fractals;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.FileSystemException;
+import java.util.Scanner;
+
 /**
  *
  * @author boril-d
@@ -28,7 +35,7 @@ public class FractalOptions {
         "#19071A"
     };
     public static final Colormap DEFAULT_COLORMAP = new Colormap(DEFAULT_COLOR_ARR);
-    public static final FractalOptions DEFAULT_OPTIONS = new FractalOptions();
+    public static final String FILE_DIR = "data\\";
     
     /**
      * @brief Unless the function exits these bounds, it is considered a part of
@@ -144,11 +151,121 @@ public class FractalOptions {
         z0 = new ComplexNum(other.z0);
     }
     
+    public void save(String name) throws FileSystemException, FileNotFoundException, IOException {
+        File file = new File(name);
+        if (file.exists()) {
+            if (!file.delete()) {
+                throw new FileSystemException("File deletion failed");
+            }
+        }
+        if (!file.createNewFile()) {
+            throw new FileSystemException("File creation failed");
+        }
+        PrintStream fout = new PrintStream(file);
+        printBound(fout);
+        printPrecision(fout);
+        printColormap(fout);
+        printPower(fout);
+        printC(fout);
+        printZ0(fout);
+        fout.close();
+    }
+    public void load(String name) throws FileNotFoundException, NumberFormatException, IllegalArgumentException {
+        File file = new File(name);
+        if (!file.exists()) {
+            throw new FileNotFoundException("File does not exist");
+        }
+        Scanner fin = new Scanner(file);
+        parseBound(fin);
+        parsePrecision(fin);
+        parseColormap(fin);
+        parsePower(fin);
+        parseC(fin);
+        parseZ0(fin);
+        fin.close();
+    }
+    
     @Override
     public String toString() {
         return String.format(
-                "bound: %f precision: %d colormap: {%s} power: %d c: {%s} z(0): {%s}",
-                bound, precision, colormap.toString(), power, c.toString(), z0.toString()
+                "bound: %s precision: %d colormap: {%s} power: %d c: {%s} z(0): {%s}",
+                Double.toString(bound), precision, colormap.toString(), power, c.toString(), z0.toString()
         );
+    }
+    
+    private void parseBound(Scanner in) throws NumberFormatException, IllegalArgumentException {
+        in.nextLine(); // the comment describing it
+        String line = in.nextLine();
+        double val = Double.parseDouble(line);
+        setBound(val);
+    }
+    private void parsePrecision(Scanner in) throws NumberFormatException, IllegalArgumentException {
+        in.nextLine(); // the comment describing it
+        String line = in.nextLine();
+        int val = Integer.parseInt(line);
+        setPrecision(val);
+    }
+    private void parseColormap(Scanner in) throws NumberFormatException, IllegalArgumentException {
+        in.nextLine(); // the comment describing it
+        String line = in.nextLine();
+        String[] val = line.split(" ");
+        setColormap(new Colormap(val));
+    }
+    private void parsePower(Scanner in) throws NumberFormatException, IllegalArgumentException {
+        in.nextLine(); // the comment describing it
+        String line = in.nextLine();
+        int val = Integer.parseInt(line);
+        setPower(val);
+    }
+    private void parseC(Scanner in) throws NumberFormatException, IllegalArgumentException {
+        in.nextLine(); // the comment describing it
+        String line = in.nextLine();
+        String[] val = line.split(" ");
+        if (val.length < 2) {
+            throw new NumberFormatException(
+                    "There must be at least 2 numbers to parse a complex num."
+            );
+        }
+        double real = Double.parseDouble(val[0]);
+        double imag = Double.parseDouble(val[0]);
+        setC(new ComplexNum(real, imag));
+    }
+    private void parseZ0(Scanner in) throws NumberFormatException, IllegalArgumentException {
+        in.nextLine(); // the comment describing it
+        String line = in.nextLine();
+        String[] val = line.split(" ");
+        if (val.length < 2) {
+            throw new NumberFormatException(
+                    "There must be at least 2 numbers to parse a complex num."
+            );
+        }
+        double real = Double.parseDouble(val[0]);
+        double imag = Double.parseDouble(val[0]);
+        setZ0(new ComplexNum(real, imag));
+    }
+    
+    private void printBound(PrintStream out) {
+        out.println("Bound:");
+        out.println(getBound());
+    }
+    private void printPrecision(PrintStream out) {
+        out.println("Precision (max iterations):");
+        out.println(getPrecision());
+    }
+    private void printColormap(PrintStream out) {
+        out.println("Colormap:");
+        out.println(getColormap());
+    }
+    private void printPower(PrintStream out) {
+        out.println("Power:");
+        out.println(getPower());
+    }
+    private void printC(PrintStream out) {
+        out.println("c:");
+        out.println(getC());
+    }
+    private void printZ0(PrintStream out) {
+        out.println("z(0):");
+        out.println(getZ0());
     }
 }
