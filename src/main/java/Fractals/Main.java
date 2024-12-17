@@ -34,6 +34,7 @@ public class Main {
             System.out.println("There is an exception... somewhere...");
             System.out.println(err.getMessage());
         }
+        opts.randomize();
         System.out.println(opts);
     }
 }

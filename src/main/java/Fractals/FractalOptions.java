@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.FileSystemException;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Scanner;
  * @author boril-d
  */
 public class FractalOptions {
-    private static final String[] DEFAULT_COLOR_ARR = {
+    public static final String[] DEFAULT_COLOR_ARR = {
         "#09012F",
         "#040449",
         "#000764",
@@ -42,14 +43,32 @@ public class FractalOptions {
      * the fractal set.
      */
     private double bound;
+    public static final double MIN_BOUND = 2.0;
+    public static final double MAX_BOUND = 2.0;
     /**
      * @brief The number of iterations for each pixel.
      */
     private int precision;
+    public static final int MIN_PRECISION = 10;
+    public static final int MAX_PRECISION = 100;
     /**
      * @brief The colormap used for coloring the fractal.
      */
     private Colormap colormap;
+    public static final String[] RANDOM_COLOR_ARR = {
+        "#FF0000",
+        "#FF6A00",
+        "#FFD800",
+        "#B6FF00",
+        "#26FF10",
+        "#00FF90",
+        "#00FFFF",
+        "#0094FF",
+        "#0026FF",
+        "#4800FF",
+        "#B200FF",
+        "#FF00DC"
+    };
     
     /*
      * All of the following fields are parts of the formula:
@@ -58,8 +77,14 @@ public class FractalOptions {
      */
     
     private int power;
+    private static final int MIN_POWER = 2;
+    private static final int MAX_POWER = 7;
     private ComplexNum c;
+    private static final ComplexNum MIN_C = new ComplexNum(-1, -1);
+    private static final ComplexNum MAX_C = new ComplexNum( 1,  1);
     private ComplexNum z0;
+    private static final ComplexNum MIN_Z0 = new ComplexNum(-1, -1);
+    private static final ComplexNum MAX_Z0 = new ComplexNum( 1,  1);
 
     public double getBound() {
         return bound;
@@ -125,7 +150,7 @@ public class FractalOptions {
         }
         this.z0 = z0;
     }
-
+    
     public FractalOptions() {
         bound = 2.0;
         precision = 50;
@@ -185,6 +210,16 @@ public class FractalOptions {
         fin.close();
     }
     
+    public void randomize() {
+        Random rng = new Random();
+        randomizeBound(rng);
+        randomizePrecision(rng);
+        randomizeColormap(rng);
+        randomizePower(rng);
+        randomizeC(rng);
+        randomizeZ0(rng);
+    }
+    
     @Override
     public String toString() {
         return String.format(
@@ -192,6 +227,9 @@ public class FractalOptions {
                 Double.toString(bound), precision, colormap.toString(), power, c.toString(), z0.toString()
         );
     }
+    
+    // ctrl+shift+minus
+    //<editor-fold defaultstate="collapsed" desc="helper functions">
     
     private void parseBound(Scanner in) throws NumberFormatException, IllegalArgumentException {
         in.nextLine(); // the comment describing it
@@ -256,6 +294,7 @@ public class FractalOptions {
         out.println("Colormap:");
         out.println(getColormap());
     }
+    
     private void printPower(PrintStream out) {
         out.println("Power:");
         out.println(getPower());
@@ -268,4 +307,43 @@ public class FractalOptions {
         out.println("z(0):");
         out.println(getZ0());
     }
+    
+    private void randomizeBound(Random rng) {
+        bound = MIN_BOUND + (MAX_BOUND - MIN_BOUND) * rng.nextDouble();
+    }
+    private void randomizePrecision(Random rng) {
+        precision = rng.nextInt(MAX_PRECISION - MIN_PRECISION + 1) + MIN_PRECISION;
+    }
+    private void randomizeColormap(Random rng) {
+        int index1 = rng.nextInt(RANDOM_COLOR_ARR.length);
+        int index2 = rng.nextInt(RANDOM_COLOR_ARR.length - 1);
+        
+        // ensure the same color is not picked
+        if (index2 >= index1) {
+            index2++;
+        }
+        
+        String[] colorArr = {
+            RANDOM_COLOR_ARR[index1],
+            RANDOM_COLOR_ARR[index2]
+        };
+        colormap.set(colorArr);
+    }
+    private void randomizePower(Random rng) {
+        power = rng.nextInt(MAX_POWER - MIN_POWER + 1) + MIN_POWER;
+    }
+    private void randomizeC(Random rng) {
+        double x = MIN_C.getX() + (MAX_C.getX() - MIN_C.getX()) * rng.nextDouble();
+        double y = MIN_C.getY() + (MAX_C.getY() - MIN_C.getY()) * rng.nextDouble();
+        c.setX(x);
+        c.setY(y);
+    }
+    private void randomizeZ0(Random rng) {
+        double x = MIN_Z0.getX() + (MAX_Z0.getX() - MIN_Z0.getX()) * rng.nextDouble();
+        double y = MIN_Z0.getY() + (MAX_Z0.getY() - MIN_Z0.getY()) * rng.nextDouble();
+        z0.setX(x);
+        z0.setY(y);
+    }
+    
+    //</editor-fold>
 }
