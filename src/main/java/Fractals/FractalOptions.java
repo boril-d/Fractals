@@ -228,6 +228,9 @@ public class FractalOptions {
         );
     }
     
+    // ctrl+shift+minus
+    //<editor-fold defaultstate="collapsed" desc="helper functions">
+    
     private void parseBound(Scanner in) throws NumberFormatException, IllegalArgumentException {
         in.nextLine(); // the comment describing it
         String line = in.nextLine();
@@ -291,6 +294,7 @@ public class FractalOptions {
         out.println("Colormap:");
         out.println(getColormap());
     }
+    
     private void printPower(PrintStream out) {
         out.println("Power:");
         out.println(getPower());
@@ -340,4 +344,6 @@ public class FractalOptions {
         z0.setX(x);
         z0.setY(y);
     }
+    
+    //</editor-fold>
 }

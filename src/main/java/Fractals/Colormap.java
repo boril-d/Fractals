@@ -284,7 +284,7 @@ public final class Colormap {
         return str.toString();
     }
 
-
+    //<editor-fold defaultstate="collapsed" desc="helper functions">
     private static void ensureValidType(int type) throws IllegalArgumentException {
         if (type < 0 || VALS_CNT <= type) {
             throw new IllegalArgumentException("`type` is not a valid type.");
@@ -377,7 +377,7 @@ public final class Colormap {
         }
         return (byte)(result);
     }
-
+    //</editor-fold>
 
     private int[] colors;
 }
