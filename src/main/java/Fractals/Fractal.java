@@ -30,22 +30,22 @@ public class Fractal {
        return null;
    }
    
-    public int getColor(double bound, int precision, int power, ComplexNum c, ComplexNum z0) {
+    public int getColor() {
         
-        ComplexNum z = new ComplexNum(z0);
+        ComplexNum z = new ComplexNum(options.getZ0());
         int iterations = 0;
         
-        for (int i = 0; i < precision; i++) {
+        for (int i = 0; i < options.getPrecision(); i++) {
             
-            if (abs(z.getX()) > bound && abs(z.getY()) > bound) {
+            if (abs(z.getX()) > options.getBound() || abs(z.getY()) > options.getBound()) {
                 break;
             }
             else{
-                z = ComplexNum.sum(ComplexNum.power(z, power), c);
+                z = ComplexNum.sum(ComplexNum.power(z, options.getPower()), options.getC());
                 iterations++;
             } 
         }
         
-        return (iterations/precision);
+        return options.getColormap().color((double)(iterations)/options.getPrecision());
     }
 }
