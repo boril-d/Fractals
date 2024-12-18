@@ -14,21 +14,21 @@ import static java.lang.Math.abs;
 public class Fractal {
     private FractalOptions options;
    
-   public FractalOptions getOptions (){
-       return options;
-   }
-   public void setOptions(FractalOptions options) throws IllegalArgumentException{
-       if (options == null) {
-           throw new IllegalArgumentException("Options was null!");
-       }
-       else {
-           this.options = options;
-       }
-   }
+    public FractalOptions getOptions() {
+        return options;
+    }
+    public void setOptions(FractalOptions options) throws IllegalArgumentException {
+        if (options == null) {
+            throw new IllegalArgumentException("Options was null!");
+        }
+        else {
+            this.options = options;
+        }
+    }
 
-   public BufferedImage getFractalImage (ComplexNum a, ComplexNum b, int width, int height){
-       return null;
-   }
+    public BufferedImage getFractalImage(ComplexNum bound1, ComplexNum bound2, int width, int height) {
+        return null;
+    }
    
     public int getColor() {
         
@@ -40,7 +40,7 @@ public class Fractal {
             if (abs(z.getX()) > options.getBound() || abs(z.getY()) > options.getBound()) {
                 break;
             }
-            else{
+            else {
                 z = ComplexNum.sum(ComplexNum.power(z, options.getPower()), options.getC());
                 iterations++;
             } 
