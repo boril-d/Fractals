@@ -6,10 +6,11 @@ package Fractals;
 
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JTextField;
 
 /**
  *
- * @author Gate
+ * @author bilyana-kr 
  */
 public class GUI extends javax.swing.JFrame {
     private Mandelbrot mandelbrot;
@@ -140,11 +141,28 @@ public class GUI extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Calibri", 0, 16)); // NOI18N
         jLabel3.setText("power of z =");
 
+        txtPower.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPowerActionPerformed(evt);
+            }
+        });
+
         jLabel4.setFont(new java.awt.Font("Calibri", 0, 16)); // NOI18N
         jLabel4.setText("z(0) = ");
 
+        txtZ0.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtZ0ActionPerformed(evt);
+            }
+        });
+
         btnColors.setFont(new java.awt.Font("Dialog", 0, 13)); // NOI18N
         btnColors.setText("Colors list");
+        btnColors.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnColorsActionPerformed(evt);
+            }
+        });
 
         btnSave.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         btnSave.setText("Save File");
@@ -164,6 +182,11 @@ public class GUI extends javax.swing.JFrame {
 
         btnDefaultColors.setFont(new java.awt.Font("Dialog", 0, 13)); // NOI18N
         btnDefaultColors.setText("Default Palette");
+        btnDefaultColors.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDefaultColorsActionPerformed(evt);
+            }
+        });
 
         btnRender.setFont(new java.awt.Font("Dialog", 0, 13)); // NOI18N
         btnRender.setText("Render");
@@ -181,6 +204,13 @@ public class GUI extends javax.swing.JFrame {
         btnRandomOpt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRandomOptActionPerformed(evt);
+            }
+        });
+
+        txtC.setEditable(false);
+        txtC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCActionPerformed(evt);
             }
         });
 
@@ -223,21 +253,20 @@ public class GUI extends javax.swing.JFrame {
                                     .addComponent(txtC))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())))
-            .addGroup(pnlOptionsLayout.createSequentialGroup()
-                .addGroup(pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlOptionsLayout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addComponent(btnColors))
-                    .addGroup(pnlOptionsLayout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(btnDefaultColors)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOptionsLayout.createSequentialGroup()
                 .addGap(0, 8, Short.MAX_VALUE)
                 .addComponent(radMandelbrot)
                 .addGap(18, 18, 18)
                 .addComponent(radJulia)
                 .addGap(12, 12, 12))
+            .addGroup(pnlOptionsLayout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(btnColors)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOptionsLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnDefaultColors)
+                .addGap(45, 45, 45))
         );
         pnlOptionsLayout.setVerticalGroup(
             pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,10 +347,21 @@ public class GUI extends javax.swing.JFrame {
 
     private void radMandelbrotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radMandelbrotActionPerformed
         // TODO add your handling code here:
+        
+        if (radMandelbrot.isEnabled()) {
+            txtZ0.setEditable(true);
+            txtC.setEditable(false);
+        }
     }//GEN-LAST:event_radMandelbrotActionPerformed
 
     private void radJuliaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radJuliaActionPerformed
         // TODO add your handling code here:
+        
+        if (radJulia.isEnabled()) {
+            txtZ0.setEditable(false);
+            txtC.setEditable(true);
+        }
+        
     }//GEN-LAST:event_radJuliaActionPerformed
 
     private void txtPrecisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecisionActionPerformed
@@ -369,6 +409,37 @@ public class GUI extends javax.swing.JFrame {
 
         updateOptionsDisplay();
     }//GEN-LAST:event_btnLoadActionPerformed
+    private void btnDefaultColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDefaultColorsActionPerformed
+        // TODO add your handling code here:
+        
+        currentFractal.getOptions().setColormap(new Colormap(currentFractal.getOptions().DEFAULT_COLORMAP));
+    }//GEN-LAST:event_btnDefaultColorsActionPerformed
+
+    private void txtPowerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPowerActionPerformed
+        // TODO add your handling code here:
+        String power = txtPower.getText();
+        System.out.print(power);
+    }//GEN-LAST:event_txtPowerActionPerformed
+
+    private void txtZ0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtZ0ActionPerformed
+        // TODO add your handling code here:
+        String z0 = txtZ0.getText();
+        System.out.print(z0);
+       //if (){
+            txtZ0.setEditable(false);
+        //}
+    }//GEN-LAST:event_txtZ0ActionPerformed
+
+    private void txtCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCActionPerformed
+        // TODO add your handling code here:
+        String c = txtC.getText();
+        System.out.print(c);
+    }//GEN-LAST:event_txtCActionPerformed
+
+    private void btnColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorsActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnColorsActionPerformed
 
     /**
      * @param args the command line arguments
