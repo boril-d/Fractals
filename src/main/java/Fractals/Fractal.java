@@ -11,17 +11,7 @@ import static java.lang.Math.abs;
  *
  * @author Gate
  */
-public class Fractal {
-    public Fractal() {
-        options = new FractalOptions();
-    }
-    public Fractal(FractalOptions options) {
-        this.options = options;
-    }
-    public Fractal(Fractal other) {
-        this.options = new FractalOptions(other.options);
-    }
-    
+public class Fractal { 
     private FractalOptions options;
    
     public FractalOptions getOptions() {
@@ -34,6 +24,26 @@ public class Fractal {
         else {
             this.options = options;
         }
+    }
+    
+    public Fractal() {
+        options = new FractalOptions();
+    }
+    public Fractal(FractalOptions options) {
+        set(options);
+    }
+    public Fractal(Fractal other) {
+        this.options = new FractalOptions(other.options);
+    }
+    
+    public void set() {
+        options.set();
+    }
+    public void set(FractalOptions options) {
+        this.options = options;
+    }
+    public void set(Fractal other) {
+        this.options.set(other.options);
     }
 
     public BufferedImage getFractalImage(ComplexNum bound1, ComplexNum bound2, int width, int height) {

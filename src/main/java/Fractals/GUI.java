@@ -18,7 +18,6 @@ public class GUI extends javax.swing.JFrame {
         txtPower.setText(Integer.toString(currentFractal.getOptions().getPower()));
         txtZ0.setText(currentFractal.getOptions().getZ0().toString());
         txtC.setText(currentFractal.getOptions().getC().toString());
-
     }
 
     /**
@@ -301,7 +300,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRandomOptActionPerformed
 
     private void btnRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreActionPerformed
-        currentFractal.setOptions(new FractalOptions());
+        currentFractal.getOptions().set();
         updateOptionsDisplay();
     }//GEN-LAST:event_btnRestoreActionPerformed
 

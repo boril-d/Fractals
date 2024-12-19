@@ -26,17 +26,27 @@ public class ComplexNum {
         this.y = y;
     }
     
+    public ComplexNum() {
+        set();
+    }
     public ComplexNum(double x, double y) {
+        set(x, y);
+    }
+    public ComplexNum(ComplexNum other) {
+        set(other);
+    }
+    
+    public void set() {
+        x = 0.0;
+        y = 0.0;
+    }
+    public void set(double x, double y) {
         setX(x);
         setY(y);
     }
-    
-    public ComplexNum() {
-        this(0, 0);
-    }
-    
-    public ComplexNum(ComplexNum obj) {
-        this(obj.getX(), obj.getY());
+    public void set(ComplexNum other) {
+        x = other.x;
+        y = other.y;
     }
     
     public static ComplexNum sum(ComplexNum obj1, ComplexNum obj2) {

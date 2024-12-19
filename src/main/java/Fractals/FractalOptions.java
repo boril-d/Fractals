@@ -166,7 +166,12 @@ public class FractalOptions {
     }
     
     public FractalOptions() {
-        set();
+        bound = 2.0;
+        precision = 50;
+        colormap = new Colormap(DEFAULT_COLORMAP);
+        power = 2;
+        c = new ComplexNum(0.0, 0.0);
+        z0 = new ComplexNum(0.0, 0.0);
     }
     public FractalOptions(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) throws IllegalArgumentException {
        set(bound, precision, clrmap, power, c, z0);
@@ -183,10 +188,10 @@ public class FractalOptions {
     public void set() {
         bound = 2.0;
         precision = 50;
-        colormap = new Colormap(DEFAULT_COLORMAP);
+        colormap.set(DEFAULT_COLORMAP);
         power = 2;
-        c = new ComplexNum(0.0, 0.0);
-        z0 = new ComplexNum(0.0, 0.0);
+        c.set(0.0, 0.0);
+        z0.set(0.0, 0.0);
     }
     public void set(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) throws IllegalArgumentException {
         setBound(bound);
@@ -195,6 +200,14 @@ public class FractalOptions {
         setPower(power);
         setC(c);
         setZ0(z0);
+    }
+    public void set(FractalOptions other) {
+        bound = other.bound;
+        precision = other.precision;
+        colormap.set(other.colormap);
+        power = other.power;
+        c.set(other.c);
+        z0.set(other.z0);
     }
     
     public void save(String name) throws FileSystemException, FileNotFoundException, IOException {
