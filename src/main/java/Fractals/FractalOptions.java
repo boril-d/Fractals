@@ -90,8 +90,8 @@ public class FractalOptions {
         return bound;
     }
     public void setBound(double bound) throws IllegalArgumentException {
-        if (bound <= 0) {
-            throw new IllegalArgumentException("`bound` must be > 0");
+        if (bound < MIN_BOUND || MAX_BOUND < bound) {
+            throw new IllegalArgumentException("`bound` value out of range");
         }
         this.bound = bound;
     }
@@ -100,8 +100,8 @@ public class FractalOptions {
         return precision;
     }
     public void setPrecision(int precision) throws IllegalArgumentException {
-        if (precision <= 0) {
-            throw new IllegalArgumentException("`precision` must be > 0");
+        if (precision < MIN_PRECISION || MAX_PRECISION < precision) {
+            throw new IllegalArgumentException("`precision` value out of range");
         }
         this.precision = precision;
     }
@@ -128,6 +128,9 @@ public class FractalOptions {
                     "`power` must NOT be -1, 0 or 1"
             );
         }
+        if (power < MIN_POWER || MAX_POWER < power) {
+            throw new IllegalArgumentException("`power` value out of range");
+        }
         this.power = power;
     }
 
@@ -137,6 +140,11 @@ public class FractalOptions {
     public void setC(ComplexNum c) throws IllegalArgumentException {
         if (c == null) {
             throw new IllegalArgumentException("`c` was null");
+        }
+        if (c.getX() < MIN_C.getX() || MAX_C.getX() < c.getX() || 
+            c.getY() < MIN_C.getY() || MAX_C.getY() < c.getY()) {
+            
+            throw new IllegalArgumentException("`c` value out of range");
         }
         this.c = c;
     }
@@ -148,6 +156,12 @@ public class FractalOptions {
         if (z0 == null) {
             throw new IllegalArgumentException("`z0` was null");
         }
+        if (z0.getX() < MIN_Z0.getX() || MAX_Z0.getX() < z0.getX() || 
+            z0.getY() < MIN_Z0.getY() || MAX_Z0.getY() < z0.getY()) {
+            
+            throw new IllegalArgumentException("`z0` value out of range");
+        }
+
         this.z0 = z0;
     }
     
@@ -159,13 +173,8 @@ public class FractalOptions {
         c = new ComplexNum(0.0, 0.0);
         z0 = new ComplexNum(0.0, 0.0);
     }
-    public FractalOptions(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) {
-       setBound(bound);
-       setPrecision(precision);
-       setColormap(colormap);
-       setPower(power);
-       setC(c);
-       setZ0(z0);
+    public FractalOptions(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) throws IllegalArgumentException {
+       set(bound, precision, clrmap, power, c, z0);
     }
     public FractalOptions(FractalOptions other) {
         bound = other.bound;
@@ -176,8 +185,32 @@ public class FractalOptions {
         z0 = new ComplexNum(other.z0);
     }
     
-    public void save(String name) throws FileSystemException, FileNotFoundException, IOException {
-        File file = new File(name);
+    public void set() {
+        bound = 2.0;
+        precision = 50;
+        colormap.set(DEFAULT_COLORMAP);
+        power = 2;
+        c.set(0.0, 0.0);
+        z0.set(0.0, 0.0);
+    }
+    public void set(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) throws IllegalArgumentException {
+        setBound(bound);
+        setPrecision(precision);
+        setColormap(colormap);
+        setPower(power);
+        setC(c);
+        setZ0(z0);
+    }
+    public void set(FractalOptions other) {
+        bound = other.bound;
+        precision = other.precision;
+        colormap.set(other.colormap);
+        power = other.power;
+        c.set(other.c);
+        z0.set(other.z0);
+    }
+    
+    public void save(File file) throws FileSystemException, FileNotFoundException, IOException {
         if (file.exists()) {
             if (!file.delete()) {
                 throw new FileSystemException("File deletion failed");
@@ -187,27 +220,36 @@ public class FractalOptions {
             throw new FileSystemException("File creation failed");
         }
         PrintStream fout = new PrintStream(file);
-        printBound(fout);
-        printPrecision(fout);
-        printColormap(fout);
-        printPower(fout);
-        printC(fout);
-        printZ0(fout);
-        fout.close();
+        try {
+            printBound(fout);
+            printPrecision(fout);
+            printColormap(fout);
+            printPower(fout);
+            printC(fout);
+            printZ0(fout);
+        } catch (Exception err) {
+            throw err;
+        } finally {
+            fout.close();
+        }
     }
-    public void load(String name) throws FileNotFoundException, NumberFormatException, IllegalArgumentException {
-        File file = new File(name);
+    public void load(File file) throws FileNotFoundException, NumberFormatException, IllegalArgumentException {
         if (!file.exists()) {
             throw new FileNotFoundException("File does not exist");
         }
         Scanner fin = new Scanner(file);
-        parseBound(fin);
-        parsePrecision(fin);
-        parseColormap(fin);
-        parsePower(fin);
-        parseC(fin);
-        parseZ0(fin);
-        fin.close();
+        try {
+            parseBound(fin);
+            parsePrecision(fin);
+            parseColormap(fin);
+            parsePower(fin);
+            parseC(fin);
+            parseZ0(fin);
+        } catch (Exception err) {
+            throw err;
+        } finally {            
+            fin.close();
+        }
     }
     
     public void randomize() {

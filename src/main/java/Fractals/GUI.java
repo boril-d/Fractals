@@ -5,6 +5,8 @@
 package Fractals;
 
 import javax.swing.JTextField;
+import java.io.File;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -15,6 +17,38 @@ public class GUI extends javax.swing.JFrame {
     private Julia julia;
     private Fractal currentFractal;
     
+    public static final String SAVES_DIR = "./saves/";
+    public static final String SAVES_EXTENSION = ".fopts";
+    
+    private File selectSaveToOpen() {
+        JFileChooser expl = new JFileChooser();
+        expl.setCurrentDirectory(new File(SAVES_DIR));
+        
+        int ret = expl.showOpenDialog(this);
+        if (ret != expl.APPROVE_OPTION) {
+            return null;
+        }
+        
+        return expl.getSelectedFile();
+    }
+    private File selectSaveToSave() {
+        JFileChooser expl = new JFileChooser();
+        expl.setCurrentDirectory(new File(SAVES_DIR));
+        
+        int ret = expl.showSaveDialog(this);
+        if (ret != expl.APPROVE_OPTION) {
+            return null;
+        }
+        
+        return expl.getSelectedFile();
+    }
+    
+    private void updateOptionsDisplay() {
+        txtPrecision.setText(Integer.toString(currentFractal.getOptions().getPrecision()));
+        txtPower.setText(Integer.toString(currentFractal.getOptions().getPower()));
+        txtZ0.setText(currentFractal.getOptions().getZ0().toString());
+        txtC.setText(currentFractal.getOptions().getC().toString());
+    }
 
     /**
      * Creates new form GUI
@@ -24,6 +58,8 @@ public class GUI extends javax.swing.JFrame {
         mandelbrot = new Mandelbrot();
         julia = new Julia();
         currentFractal = mandelbrot;
+
+        updateOptionsDisplay();
     }
 
     /**
@@ -84,6 +120,11 @@ public class GUI extends javax.swing.JFrame {
 
         btnRestore.setFont(new java.awt.Font("Dialog", 0, 13)); // NOI18N
         btnRestore.setText("Restore Defaults");
+        btnRestore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestoreActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jLabel2.setText("Precision:");
@@ -125,9 +166,19 @@ public class GUI extends javax.swing.JFrame {
 
         btnSave.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         btnSave.setText("Save File");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnLoad.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         btnLoad.setText("Load File");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadActionPerformed(evt);
+            }
+        });
 
         btnDefaultColors.setFont(new java.awt.Font("Dialog", 0, 13)); // NOI18N
         btnDefaultColors.setText("Default Palette");
@@ -197,7 +248,7 @@ public class GUI extends javax.swing.JFrame {
                                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtPower, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                                    .addComponent(txtPower)
                                     .addComponent(txtZ0)
                                     .addComponent(txtC))
                                 .addGap(0, 0, Short.MAX_VALUE)))
@@ -314,11 +365,16 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_radJuliaActionPerformed
 
     private void txtPrecisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecisionActionPerformed
-        // TODO add your handling code here:
+        try {
+            currentFractal.getOptions().setPrecision(Integer.parseInt(txtPrecision.getText()));
+        } catch (Exception err) {
+            txtPrecision.setText(Integer.toString(currentFractal.getOptions().getPrecision()));
+        }
     }//GEN-LAST:event_txtPrecisionActionPerformed
 
     private void btnRandomOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomOptActionPerformed
-        // TODO add your handling code here:
+        currentFractal.getOptions().randomize();
+        updateOptionsDisplay();
     }//GEN-LAST:event_btnRandomOptActionPerformed
 
     private void btnDefaultColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDefaultColorsActionPerformed

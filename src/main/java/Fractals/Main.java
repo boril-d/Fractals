@@ -4,37 +4,43 @@
  */
 package Fractals;
 
+import java.io.File;
+import javax.swing.JFileChooser;
+
 /**
  *
  * @author borilad
  */
 public class Main {
-    public static FractalOptions makeIrregularOptions() {
-        FractalOptions result = new FractalOptions();
-        result.setBound(1);
-        result.setPrecision(2);
-        String[] colorArr = { "#ff0000", "#00Ff00" };
-        result.setColormap(new Colormap(colorArr));
-        result.setPower(3);
-        result.setC(new ComplexNum(4, 5));
-        result.setZ0(new ComplexNum(6, 7));
-        return result;
-    }
-    public static FractalOptions makeNormalOptions() {
-        return new FractalOptions();
-    }
-
-    public static void main(String[] args) {
-        FractalOptions opts = makeIrregularOptions();
-        try {
-            opts.load("hello.txt");
-            opts.setBound(5);
-            opts.save("hello.txt");
-        } catch (Exception err) {
-            System.out.println("There is an exception... somewhere...");
-            System.out.println(err.getMessage());
+    public static final String SAVES_DIR = "./saves/";
+    public static final String SAVES_EXTENSION = ".fopts";
+    
+    static private File selectSaveToOpen() {
+        JFileChooser expl = new JFileChooser();
+        expl.setCurrentDirectory(new File(SAVES_DIR));
+        
+        int ret = expl.showOpenDialog(null);
+        if (ret != expl.APPROVE_OPTION) {
+            return null;
         }
-        opts.randomize();
-        System.out.println(opts);
+        
+        return expl.getSelectedFile();
+    }
+    static private File selectSaveToSave() {
+        JFileChooser expl = new JFileChooser();
+        expl.setCurrentDirectory(new File(SAVES_DIR));
+        
+        int ret = expl.showSaveDialog(null);
+        if (ret != expl.APPROVE_OPTION) {
+            return null;
+        }
+        
+        return expl.getSelectedFile();
+    }
+    
+    public static void main(String[] args) {
+        File file = selectSaveToSave();
+        System.out.println(file.getName());
+        System.out.println("save ended.");
     }
 }

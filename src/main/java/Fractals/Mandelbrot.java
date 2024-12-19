@@ -11,6 +11,16 @@ import java.awt.image.BufferedImage;
  * @author borilad
  */
 public class Mandelbrot extends Fractal {
+    public Mandelbrot() {
+        super();
+    }
+    public Mandelbrot(FractalOptions options) {
+        super(options);
+    }
+    public Mandelbrot(Mandelbrot other) {
+        super(other);
+    }
+    
     public BufferedImage getFractalImage(ComplexNum bound1, ComplexNum bound2, int width, int height) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         
@@ -39,8 +49,7 @@ public class Mandelbrot extends Fractal {
             for (int x = 0; x < width; x++) {
                 currCoord.setX((double)(x) / width * (right - left) + left);
                 currCoord.setY((double)(y) / height * (up - down) + down);
-                getOptions().getC().setX(currCoord.getX());
-                getOptions().getC().setY(currCoord.getY());
+                getOptions().getC().set(currCoord.getX(), currCoord.getY());
                 result.setRGB(x, height - y - 1, getColor());
             }
         }
