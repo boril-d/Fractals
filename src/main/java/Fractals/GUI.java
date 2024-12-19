@@ -4,6 +4,9 @@
  */
 package Fractals;
 
+import java.io.File;
+import javax.swing.JFileChooser;
+
 /**
  *
  * @author Gate
@@ -13,7 +16,33 @@ public class GUI extends javax.swing.JFrame {
     private Julia julia;
     private Fractal currentFractal;
     
-    void updateOptionsDisplay() {
+    public static final String SAVES_DIR = "./saves/";
+    public static final String SAVES_EXTENSION = ".fopts";
+    
+    private File selectSaveToOpen() {
+        JFileChooser expl = new JFileChooser();
+        expl.setCurrentDirectory(new File(SAVES_DIR));
+        
+        int ret = expl.showOpenDialog(this);
+        if (ret != expl.APPROVE_OPTION) {
+            return null;
+        }
+        
+        return expl.getSelectedFile();
+    }
+    private File selectSaveToSave() {
+        JFileChooser expl = new JFileChooser();
+        expl.setCurrentDirectory(new File(SAVES_DIR));
+        
+        int ret = expl.showSaveDialog(this);
+        if (ret != expl.APPROVE_OPTION) {
+            return null;
+        }
+        
+        return expl.getSelectedFile();
+    }
+    
+    private void updateOptionsDisplay() {
         txtPrecision.setText(Integer.toString(currentFractal.getOptions().getPrecision()));
         txtPower.setText(Integer.toString(currentFractal.getOptions().getPower()));
         txtZ0.setText(currentFractal.getOptions().getZ0().toString());
@@ -119,9 +148,19 @@ public class GUI extends javax.swing.JFrame {
 
         btnSave.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         btnSave.setText("Save File");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnLoad.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         btnLoad.setText("Load File");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadActionPerformed(evt);
+            }
+        });
 
         btnDefaultColors.setFont(new java.awt.Font("Dialog", 0, 13)); // NOI18N
         btnDefaultColors.setText("Default Palette");
@@ -291,7 +330,6 @@ public class GUI extends javax.swing.JFrame {
         } catch (Exception err) {
             txtPrecision.setText(Integer.toString(currentFractal.getOptions().getPrecision()));
         }
-        System.out.println(currentFractal.getOptions());
     }//GEN-LAST:event_txtPrecisionActionPerformed
 
     private void btnRandomOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomOptActionPerformed
@@ -303,6 +341,34 @@ public class GUI extends javax.swing.JFrame {
         currentFractal.getOptions().set();
         updateOptionsDisplay();
     }//GEN-LAST:event_btnRestoreActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        File file = selectSaveToSave();
+        if (file == null) {
+            return;
+        }
+        try {
+            currentFractal.getOptions().save(file);
+        } catch (Exception err) {
+            System.out.println("An error occured during save...");
+            System.out.println(err.getMessage());
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
+        File file = selectSaveToOpen();
+        if (file == null) {
+            return;
+        }
+        try {
+            currentFractal.getOptions().load(file);
+        } catch (Exception err) {
+            System.out.println("An error occured during load...");
+            System.out.println(err.getMessage());
+        }
+
+        updateOptionsDisplay();
+    }//GEN-LAST:event_btnLoadActionPerformed
 
     /**
      * @param args the command line arguments

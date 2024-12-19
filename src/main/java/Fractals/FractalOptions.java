@@ -156,8 +156,8 @@ public class FractalOptions {
         if (z0 == null) {
             throw new IllegalArgumentException("`z0` was null");
         }
-        if (z0.getX() < MIN_Z0.getX() || MIN_Z0.getX() < z0.getX() || 
-            z0.getY() < MIN_Z0.getY() || MIN_Z0.getY() < z0.getY()) {
+        if (z0.getX() < MIN_Z0.getX() || MAX_Z0.getX() < z0.getX() || 
+            z0.getY() < MIN_Z0.getY() || MAX_Z0.getY() < z0.getY()) {
             
             throw new IllegalArgumentException("`z0` value out of range");
         }
@@ -210,8 +210,7 @@ public class FractalOptions {
         z0.set(other.z0);
     }
     
-    public void save(String name) throws FileSystemException, FileNotFoundException, IOException {
-        File file = new File(name);
+    public void save(File file) throws FileSystemException, FileNotFoundException, IOException {
         if (file.exists()) {
             if (!file.delete()) {
                 throw new FileSystemException("File deletion failed");
@@ -221,27 +220,36 @@ public class FractalOptions {
             throw new FileSystemException("File creation failed");
         }
         PrintStream fout = new PrintStream(file);
-        printBound(fout);
-        printPrecision(fout);
-        printColormap(fout);
-        printPower(fout);
-        printC(fout);
-        printZ0(fout);
-        fout.close();
+        try {
+            printBound(fout);
+            printPrecision(fout);
+            printColormap(fout);
+            printPower(fout);
+            printC(fout);
+            printZ0(fout);
+        } catch (Exception err) {
+            throw err;
+        } finally {
+            fout.close();
+        }
     }
-    public void load(String name) throws FileNotFoundException, NumberFormatException, IllegalArgumentException {
-        File file = new File(name);
+    public void load(File file) throws FileNotFoundException, NumberFormatException, IllegalArgumentException {
         if (!file.exists()) {
             throw new FileNotFoundException("File does not exist");
         }
         Scanner fin = new Scanner(file);
-        parseBound(fin);
-        parsePrecision(fin);
-        parseColormap(fin);
-        parsePower(fin);
-        parseC(fin);
-        parseZ0(fin);
-        fin.close();
+        try {
+            parseBound(fin);
+            parsePrecision(fin);
+            parseColormap(fin);
+            parsePower(fin);
+            parseC(fin);
+            parseZ0(fin);
+        } catch (Exception err) {
+            throw err;
+        } finally {            
+            fin.close();
+        }
     }
     
     public void randomize() {
