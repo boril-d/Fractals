@@ -90,8 +90,8 @@ public class FractalOptions {
         return bound;
     }
     public void setBound(double bound) throws IllegalArgumentException {
-        if (bound <= 0) {
-            throw new IllegalArgumentException("`bound` must be > 0");
+        if (bound < MIN_BOUND || MAX_BOUND < bound) {
+            throw new IllegalArgumentException("`bound` value out of range");
         }
         this.bound = bound;
     }
@@ -100,8 +100,8 @@ public class FractalOptions {
         return precision;
     }
     public void setPrecision(int precision) throws IllegalArgumentException {
-        if (precision <= 0) {
-            throw new IllegalArgumentException("`precision` must be > 0");
+        if (precision < MIN_PRECISION || MAX_PRECISION < precision) {
+            throw new IllegalArgumentException("`precision` value out of range");
         }
         this.precision = precision;
     }
@@ -128,6 +128,9 @@ public class FractalOptions {
                     "`power` must NOT be -1, 0 or 1"
             );
         }
+        if (power < MIN_POWER || MAX_POWER < power) {
+            throw new IllegalArgumentException("`power` value out of range");
+        }
         this.power = power;
     }
 
@@ -137,6 +140,11 @@ public class FractalOptions {
     public void setC(ComplexNum c) throws IllegalArgumentException {
         if (c == null) {
             throw new IllegalArgumentException("`c` was null");
+        }
+        if (c.getX() < MIN_C.getX() || MAX_C.getX() < c.getX() || 
+            c.getY() < MIN_C.getY() || MAX_C.getY() < c.getY()) {
+            
+            throw new IllegalArgumentException("`c` value out of range");
         }
         this.c = c;
     }
@@ -148,24 +156,20 @@ public class FractalOptions {
         if (z0 == null) {
             throw new IllegalArgumentException("`z0` was null");
         }
+        if (z0.getX() < MIN_Z0.getX() || MIN_Z0.getX() < z0.getX() || 
+            z0.getY() < MIN_Z0.getY() || MIN_Z0.getY() < z0.getY()) {
+            
+            throw new IllegalArgumentException("`z0` value out of range");
+        }
+
         this.z0 = z0;
     }
     
     public FractalOptions() {
-        bound = 2.0;
-        precision = 50;
-        colormap = new Colormap(DEFAULT_COLORMAP);
-        power = 2;
-        c = new ComplexNum(0.0, 0.0);
-        z0 = new ComplexNum(0.0, 0.0);
+        set();
     }
-    public FractalOptions(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) {
-       setBound(bound);
-       setPrecision(precision);
-       setColormap(colormap);
-       setPower(power);
-       setC(c);
-       setZ0(z0);
+    public FractalOptions(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) throws IllegalArgumentException {
+       set(bound, precision, clrmap, power, c, z0);
     }
     public FractalOptions(FractalOptions other) {
         bound = other.bound;
@@ -174,6 +178,23 @@ public class FractalOptions {
         power = other.power;
         c = new ComplexNum(other.c);
         z0 = new ComplexNum(other.z0);
+    }
+    
+    public void set() {
+        bound = 2.0;
+        precision = 50;
+        colormap = new Colormap(DEFAULT_COLORMAP);
+        power = 2;
+        c = new ComplexNum(0.0, 0.0);
+        z0 = new ComplexNum(0.0, 0.0);
+    }
+    public void set(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) throws IllegalArgumentException {
+        setBound(bound);
+        setPrecision(precision);
+        setColormap(colormap);
+        setPower(power);
+        setC(c);
+        setZ0(z0);
     }
     
     public void save(String name) throws FileSystemException, FileNotFoundException, IOException {

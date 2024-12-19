@@ -287,7 +287,12 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_radJuliaActionPerformed
 
     private void txtPrecisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecisionActionPerformed
-        // TODO add your handling code here:
+        try {
+            currentFractal.getOptions().setPrecision(Integer.parseInt(txtPrecision.getText()));
+        } catch (Exception err) {
+            txtPrecision.setText(Integer.toString(currentFractal.getOptions().getPrecision()));
+        }
+        System.out.println(currentFractal.getOptions());
     }//GEN-LAST:event_txtPrecisionActionPerformed
 
     private void btnRandomOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomOptActionPerformed
