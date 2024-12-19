@@ -4,9 +4,9 @@
  */
 package Fractals;
 
-import javax.swing.JTextField;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JTextField;
 
 /**
  *
@@ -377,6 +377,38 @@ public class GUI extends javax.swing.JFrame {
         updateOptionsDisplay();
     }//GEN-LAST:event_btnRandomOptActionPerformed
 
+    private void btnRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreActionPerformed
+        currentFractal.getOptions().set();
+        updateOptionsDisplay();
+    }//GEN-LAST:event_btnRestoreActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        File file = selectSaveToSave();
+        if (file == null) {
+            return;
+        }
+        try {
+            currentFractal.getOptions().save(file);
+        } catch (Exception err) {
+            System.out.println("An error occured during save...");
+            System.out.println(err.getMessage());
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
+        File file = selectSaveToOpen();
+        if (file == null) {
+            return;
+        }
+        try {
+            currentFractal.getOptions().load(file);
+        } catch (Exception err) {
+            System.out.println("An error occured during load...");
+            System.out.println(err.getMessage());
+        }
+
+        updateOptionsDisplay();
+    }//GEN-LAST:event_btnLoadActionPerformed
     private void btnDefaultColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDefaultColorsActionPerformed
         // TODO add your handling code here:
         
