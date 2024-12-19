@@ -86,7 +86,7 @@
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="txtPower" pref="54" max="32767" attributes="0"/>
+                                      <Component id="txtPower" max="32767" attributes="0"/>
                                       <Component id="txtZ0" max="32767" attributes="0"/>
                                       <Component id="txtC" max="32767" attributes="0"/>
                                   </Group>
@@ -208,6 +208,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Restore Defaults"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRestoreActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>

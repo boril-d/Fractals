@@ -11,6 +11,16 @@ import java.awt.image.BufferedImage;
  * @author borilad
  */
 public class Mandelbrot extends Fractal {
+    public Mandelbrot() {
+        super();
+    }
+    public Mandelbrot(FractalOptions options) {
+        super(options);
+    }
+    public Mandelbrot(Mandelbrot other) {
+        super(other);
+    }
+    
     public BufferedImage getFractalImage(ComplexNum bound1, ComplexNum bound2, int width, int height) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         

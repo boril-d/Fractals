@@ -13,6 +13,13 @@ public class GUI extends javax.swing.JFrame {
     private Julia julia;
     private Fractal currentFractal;
     
+    void updateOptionsDisplay() {
+        txtPrecision.setText(Integer.toString(currentFractal.getOptions().getPrecision()));
+        txtPower.setText(Integer.toString(currentFractal.getOptions().getPower()));
+        txtZ0.setText(currentFractal.getOptions().getZ0().toString());
+        txtC.setText(currentFractal.getOptions().getC().toString());
+
+    }
 
     /**
      * Creates new form GUI
@@ -22,6 +29,8 @@ public class GUI extends javax.swing.JFrame {
         mandelbrot = new Mandelbrot();
         julia = new Julia();
         currentFractal = mandelbrot;
+
+        updateOptionsDisplay();
     }
 
     /**
@@ -82,6 +91,11 @@ public class GUI extends javax.swing.JFrame {
 
         btnRestore.setFont(new java.awt.Font("Dialog", 0, 13)); // NOI18N
         btnRestore.setText("Restore Defaults");
+        btnRestore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestoreActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jLabel2.setText("Precision:");
@@ -166,7 +180,7 @@ public class GUI extends javax.swing.JFrame {
                                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtPower, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                                    .addComponent(txtPower)
                                     .addComponent(txtZ0)
                                     .addComponent(txtC))
                                 .addGap(0, 0, Short.MAX_VALUE)))
@@ -277,8 +291,14 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPrecisionActionPerformed
 
     private void btnRandomOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomOptActionPerformed
-        // TODO add your handling code here:
+        currentFractal.getOptions().randomize();
+        updateOptionsDisplay();
     }//GEN-LAST:event_btnRandomOptActionPerformed
+
+    private void btnRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreActionPerformed
+        currentFractal.setOptions(new FractalOptions());
+        updateOptionsDisplay();
+    }//GEN-LAST:event_btnRestoreActionPerformed
 
     /**
      * @param args the command line arguments

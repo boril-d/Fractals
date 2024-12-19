@@ -12,6 +12,16 @@ import static java.lang.Math.abs;
  * @author Gate
  */
 public class Fractal {
+    public Fractal() {
+        options = new FractalOptions();
+    }
+    public Fractal(FractalOptions options) {
+        this.options = options;
+    }
+    public Fractal(Fractal other) {
+        this.options = new FractalOptions(other.options);
+    }
+    
     private FractalOptions options;
    
     public FractalOptions getOptions() {
