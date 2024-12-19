@@ -9,7 +9,7 @@ import static java.lang.Math.abs;
 
 /**
  *
- * @author Gate
+ * @author bilyana-kr 
  */
 public class Fractal {
     private FractalOptions options;
