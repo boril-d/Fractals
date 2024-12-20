@@ -4,43 +4,22 @@
  */
 package Fractals;
 
-import java.io.File;
-import javax.swing.JFileChooser;
-
 /**
  *
  * @author borilad
  */
 public class Main {
-    public static final String SAVES_DIR = "./saves/";
-    public static final String SAVES_EXTENSION = ".fopts";
-    
-    static private File selectSaveToOpen() {
-        JFileChooser expl = new JFileChooser();
-        expl.setCurrentDirectory(new File(SAVES_DIR));
-        
-        int ret = expl.showOpenDialog(null);
-        if (ret != expl.APPROVE_OPTION) {
-            return null;
-        }
-        
-        return expl.getSelectedFile();
-    }
-    static private File selectSaveToSave() {
-        JFileChooser expl = new JFileChooser();
-        expl.setCurrentDirectory(new File(SAVES_DIR));
-        
-        int ret = expl.showSaveDialog(null);
-        if (ret != expl.APPROVE_OPTION) {
-            return null;
-        }
-        
-        return expl.getSelectedFile();
-    }
-    
     public static void main(String[] args) {
-        File file = selectSaveToSave();
-        System.out.println(file.getName());
-        System.out.println("save ended.");
+        Colormap colormap = new Colormap();
+        colormap.fromString("#ff0000 #00ff00");
+        System.out.println(Colormap.intToString(colormap.getColor(0.0)));
+        System.out.println(Colormap.intToString(colormap.getColor(0.5)));
+        System.out.println(Colormap.intToString(colormap.getColor(1.0)));
+        System.out.println(colormap);
+        System.out.println(Colormap.COLOR_PATTERN);
+        System.out.println(Colormap.COLORS_PATTERN);
+        //File file = selectSaveToSave();
+        //System.out.println(file.getName());
+        //System.out.println("save ended.");
     }
 }

@@ -96,10 +96,21 @@ public class ComplexNum {
     
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder();
-        str.append(x);
-        str.append(" ");
-        str.append(y);
-        return str.toString();
+        return x + " " + y;
+    }
+    public void fromString(String str) throws IllegalArgumentException {
+        if (str == null || str.length() <= 0) {
+            throw new IllegalArgumentException("`null` or empty string");
+        }
+        String[] components = str.split("\\s");
+        if (components.length < 2) {
+            throw new IllegalArgumentException("A complex num requires 2 values");
+        }
+        try {
+            x = Double.parseDouble(components[0]);
+            y = Double.parseDouble(components[1]);
+        } catch (NumberFormatException err) {
+            throw new IllegalArgumentException("Error during parsing");
+        }
     }
 }

@@ -66,6 +66,6 @@ public class Fractal {
             } 
         }
         
-        return options.getColormap().color((double)(iterations)/options.getPrecision());
+        return options.getColormap().getColor((double)(iterations)/options.getPrecision());
     }
 }

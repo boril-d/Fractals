@@ -18,25 +18,12 @@ import java.util.Scanner;
  */
 public class FractalOptions {
     public static final String[] DEFAULT_COLOR_ARR = {
-        "#09012F",
-        "#040449",
-        "#000764",
-        "#0C2C8A",
-        "#1852B1",
-        "#397DD1",
-        "#86B5E5",
-        "#D3ECF8",
-        "#F1E9BF",
-        "#F8C95F",
-        "#FFAA00",
-        "#CC8000",
-        "#995700",
-        "#6A3403",
-        "#421E0F",
-        "#19071A"
+        "#09012F", "#040449", "#000764", "#0C2C8A",
+        "#1852B1", "#397DD1", "#86B5E5", "#D3ECF8",
+        "#F1E9BF", "#F8C95F", "#FFAA00", "#CC8000",
+        "#995700", "#6A3403", "#421E0F", "#19071A",
     };
     public static final Colormap DEFAULT_COLORMAP = new Colormap(DEFAULT_COLOR_ARR);
-    public static final String FILE_DIR = "data\\";
     
     /**
      * @brief Unless the function exits these bounds, it is considered a part of
@@ -77,7 +64,7 @@ public class FractalOptions {
      */
     
     private int power;
-    private static final int MIN_POWER = 2;
+    private static final int MIN_POWER = -2;
     private static final int MAX_POWER = 7;
     private ComplexNum c;
     private static final ComplexNum MIN_C = new ComplexNum(-1, -1);
@@ -113,7 +100,7 @@ public class FractalOptions {
         if (colormap == null) {
             throw new IllegalArgumentException("`colormap` was null");
         }
-        if (colormap.colorsCount() <= 1) {
+        if (colormap.get().length <= 1) {
             throw new IllegalArgumentException("`colormap.colorsCount()` must be > 1");
         }
         this.colormap = colormap;
