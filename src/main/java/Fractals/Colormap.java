@@ -150,7 +150,7 @@ public final class Colormap {
         
         return result.toString();
     }
-    public void fromString(String str) {
+    public void fromString(String str) throws IllegalArgumentException {
         if (!(str + "\n").matches(COLORS_PATTERN)) {
             throw new IllegalArgumentException("Invalid string colors format");
         }

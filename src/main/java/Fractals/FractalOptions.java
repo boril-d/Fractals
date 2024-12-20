@@ -23,6 +23,11 @@ public class FractalOptions {
         "#F1E9BF", "#F8C95F", "#FFAA00", "#CC8000",
         "#995700", "#6A3403", "#421E0F", "#19071A",
     };
+    public static final String[] RANDOM_COLOR_ARR = {
+        "#FF0000", "#FF6A00", "#FFD800", "#B6FF00",
+        "#26FF10", "#00FF90", "#00FFFF", "#0094FF",
+        "#0026FF", "#4800FF", "#B200FF", "#FF00DC"
+    };
     public static final Colormap DEFAULT_COLORMAP = new Colormap(DEFAULT_COLOR_ARR);
     
     /**
@@ -30,32 +35,14 @@ public class FractalOptions {
      * the fractal set.
      */
     private double bound;
-    public static final double MIN_BOUND = 2.0;
-    public static final double MAX_BOUND = 2.0;
     /**
      * @brief The number of iterations for each pixel.
      */
     private int precision;
-    public static final int MIN_PRECISION = 10;
-    public static final int MAX_PRECISION = 100;
     /**
      * @brief The colormap used for coloring the fractal.
      */
     private Colormap colormap;
-    public static final String[] RANDOM_COLOR_ARR = {
-        "#FF0000",
-        "#FF6A00",
-        "#FFD800",
-        "#B6FF00",
-        "#26FF10",
-        "#00FF90",
-        "#00FFFF",
-        "#0094FF",
-        "#0026FF",
-        "#4800FF",
-        "#B200FF",
-        "#FF00DC"
-    };
     
     /*
      * All of the following fields are parts of the formula:
@@ -64,22 +51,14 @@ public class FractalOptions {
      */
     
     private int power;
-    private static final int MIN_POWER = -2;
-    private static final int MAX_POWER = 7;
     private ComplexNum c;
-    private static final ComplexNum MIN_C = new ComplexNum(-1, -1);
-    private static final ComplexNum MAX_C = new ComplexNum( 1,  1);
     private ComplexNum z0;
-    private static final ComplexNum MIN_Z0 = new ComplexNum(-1, -1);
-    private static final ComplexNum MAX_Z0 = new ComplexNum( 1,  1);
 
     public double getBound() {
         return bound;
     }
     public void setBound(double bound) throws IllegalArgumentException {
-        if (bound < MIN_BOUND || MAX_BOUND < bound) {
-            throw new IllegalArgumentException("`bound` value out of range");
-        }
+        ensureValidBound(bound);
         this.bound = bound;
     }
 
@@ -87,9 +66,7 @@ public class FractalOptions {
         return precision;
     }
     public void setPrecision(int precision) throws IllegalArgumentException {
-        if (precision < MIN_PRECISION || MAX_PRECISION < precision) {
-            throw new IllegalArgumentException("`precision` value out of range");
-        }
+        ensureValidPrecision(precision);
         this.precision = precision;
     }
 
@@ -97,12 +74,7 @@ public class FractalOptions {
         return colormap;
     }
     public void setColormap(Colormap colormap) throws IllegalArgumentException {
-        if (colormap == null) {
-            throw new IllegalArgumentException("`colormap` was null");
-        }
-        if (colormap.get().length <= 1) {
-            throw new IllegalArgumentException("`colormap.colorsCount()` must be > 1");
-        }
+        ensureValidColormap(colormap);
         this.colormap = colormap;
     }
 
@@ -110,14 +82,7 @@ public class FractalOptions {
         return power;
     }
     public void setPower(int power) throws IllegalArgumentException {
-        if (power == -1 || power == 0 || power == 1) {
-            throw new IllegalArgumentException(
-                    "`power` must NOT be -1, 0 or 1"
-            );
-        }
-        if (power < MIN_POWER || MAX_POWER < power) {
-            throw new IllegalArgumentException("`power` value out of range");
-        }
+        ensureValidPower(power);
         this.power = power;
     }
 
@@ -125,14 +90,7 @@ public class FractalOptions {
         return c;
     }
     public void setC(ComplexNum c) throws IllegalArgumentException {
-        if (c == null) {
-            throw new IllegalArgumentException("`c` was null");
-        }
-        if (c.getX() < MIN_C.getX() || MAX_C.getX() < c.getX() || 
-            c.getY() < MIN_C.getY() || MAX_C.getY() < c.getY()) {
-            
-            throw new IllegalArgumentException("`c` value out of range");
-        }
+        ensureValidC(c);
         this.c = c;
     }
 
@@ -140,15 +98,7 @@ public class FractalOptions {
         return z0;
     }
     public void setZ0(ComplexNum z0) throws IllegalArgumentException {
-        if (z0 == null) {
-            throw new IllegalArgumentException("`z0` was null");
-        }
-        if (z0.getX() < MIN_Z0.getX() || MAX_Z0.getX() < z0.getX() || 
-            z0.getY() < MIN_Z0.getY() || MAX_Z0.getY() < z0.getY()) {
-            
-            throw new IllegalArgumentException("`z0` value out of range");
-        }
-
+        ensureValidZ0(z0);
         this.z0 = z0;
     }
     
@@ -157,7 +107,7 @@ public class FractalOptions {
         precision = 50;
         colormap = new Colormap(DEFAULT_COLORMAP);
         power = 2;
-        c = new ComplexNum(0.0, 0.0);
+        c = new ComplexNum(0.4, 0.0);
         z0 = new ComplexNum(0.0, 0.0);
     }
     public FractalOptions(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) throws IllegalArgumentException {
@@ -206,33 +156,44 @@ public class FractalOptions {
         if (!file.createNewFile()) {
             throw new FileSystemException("File creation failed");
         }
+        
         PrintStream fout = new PrintStream(file);
-        try {
-            printBound(fout);
-            printPrecision(fout);
-            printColormap(fout);
-            printPower(fout);
-            printC(fout);
-            printZ0(fout);
-        } catch (Exception err) {
-            throw err;
-        } finally {
-            fout.close();
-        }
+        
+        fout.println("bound:");
+        fout.println(boundToString());
+        fout.println("precision:");
+        fout.println(precisionToString());
+        fout.println("colormap:");
+        fout.println(colormapToString());
+        fout.println("power:");
+        fout.println(powerToString());
+        fout.println("c:");
+        fout.println(cToString());
+        fout.println("z(0):");
+        fout.println(z0ToString());
+        
+        fout.close();
     }
     public void load(File file) throws FileNotFoundException, NumberFormatException, IllegalArgumentException {
         if (!file.exists()) {
             throw new FileNotFoundException("File does not exist");
         }
+        
         Scanner fin = new Scanner(file);
         try {
-            parseBound(fin);
-            parsePrecision(fin);
-            parseColormap(fin);
-            parsePower(fin);
-            parseC(fin);
-            parseZ0(fin);
-        } catch (Exception err) {
+            fin.nextLine();
+            boundFromString(fin.nextLine());
+            fin.nextLine();
+            precisionFromString(fin.nextLine());
+            fin.nextLine();
+            colormapFromString(fin.nextLine());
+            fin.nextLine();
+            powerFromString(fin.nextLine());
+            fin.nextLine();
+            cFromString(fin.nextLine());
+            fin.nextLine();
+            z0FromString(fin.nextLine());
+        } catch (IllegalArgumentException err) {
             throw err;
         } finally {            
             fin.close();
@@ -260,88 +221,111 @@ public class FractalOptions {
     // ctrl+shift+minus
     //<editor-fold defaultstate="collapsed" desc="helper functions">
     
-    private void parseBound(Scanner in) throws NumberFormatException, IllegalArgumentException {
-        in.nextLine(); // the comment describing it
-        String line = in.nextLine();
-        double val = Double.parseDouble(line);
-        setBound(val);
-    }
-    private void parsePrecision(Scanner in) throws NumberFormatException, IllegalArgumentException {
-        in.nextLine(); // the comment describing it
-        String line = in.nextLine();
-        int val = Integer.parseInt(line);
-        setPrecision(val);
-    }
-    private void parseColormap(Scanner in) throws NumberFormatException, IllegalArgumentException {
-        in.nextLine(); // the comment describing it
-        String line = in.nextLine();
-        String[] val = line.split(" ");
-        setColormap(new Colormap(val));
-    }
-    private void parsePower(Scanner in) throws NumberFormatException, IllegalArgumentException {
-        in.nextLine(); // the comment describing it
-        String line = in.nextLine();
-        int val = Integer.parseInt(line);
-        setPower(val);
-    }
-    private void parseC(Scanner in) throws NumberFormatException, IllegalArgumentException {
-        in.nextLine(); // the comment describing it
-        String line = in.nextLine();
-        String[] val = line.split(" ");
-        if (val.length < 2) {
-            throw new NumberFormatException(
-                    "There must be at least 2 numbers to parse a complex num."
-            );
+    private static void ensureValidBound(double bound) throws IllegalArgumentException {
+        if (bound < 2.0 || 2.0 < bound) {
+            throw new IllegalArgumentException("`bound` value out of range");
         }
-        double real = Double.parseDouble(val[0]);
-        double imag = Double.parseDouble(val[0]);
-        setC(new ComplexNum(real, imag));
     }
-    private void parseZ0(Scanner in) throws NumberFormatException, IllegalArgumentException {
-        in.nextLine(); // the comment describing it
-        String line = in.nextLine();
-        String[] val = line.split(" ");
-        if (val.length < 2) {
-            throw new NumberFormatException(
-                    "There must be at least 2 numbers to parse a complex num."
-            );
+    private static void ensureValidPrecision(int precision) throws IllegalArgumentException {
+        if (precision < 10 || 300 < precision) {
+            throw new IllegalArgumentException("`precision` value out of range");
         }
-        double real = Double.parseDouble(val[0]);
-        double imag = Double.parseDouble(val[0]);
-        setZ0(new ComplexNum(real, imag));
+    }
+    private static void ensureValidColormap(Colormap colormap) throws IllegalArgumentException {
+        if (colormap == null) {
+            throw new IllegalArgumentException("`colormap` is null");
+        }
+    }
+    private static void ensureValidPower(int power) throws IllegalArgumentException {
+        if (power < -7 || 7 < power) {
+            throw new IllegalArgumentException("`power` value out of range");
+        }
+        if (power == -1 || power == 0 || power == 1) {
+            throw new IllegalArgumentException("`power` must not be -1, 0 or 1 (I am sure you see why)");
+        }
+    }
+    private static void ensureValidC(ComplexNum c) throws IllegalArgumentException {
+        if (c == null) {
+            throw new IllegalArgumentException("`c` is null");
+        }
+        if (c.getX() < -1 || 1 < c.getX() ||
+            c.getY() < -1 || 1 < c.getY()) {
+            
+            throw new IllegalArgumentException("`c` value out of range");
+        }
+    }
+    private static void ensureValidZ0(ComplexNum z0) throws IllegalArgumentException {
+        if (z0 == null) {
+            throw new IllegalArgumentException("`z0` is null");
+        }
+        if (z0.getX() < -1 || 1 < z0.getX() ||
+            z0.getY() < -1 || 1 < z0.getY()) {
+            
+            throw new IllegalArgumentException("`z0` value out of range");
+        }
     }
     
-    private void printBound(PrintStream out) {
-        out.println("Bound:");
-        out.println(getBound());
+    private void boundFromString(String str) throws IllegalArgumentException {
+        try {
+            bound = Double.parseDouble(str);
+            ensureValidBound(bound);
+        } catch (NumberFormatException err) {
+            throw new IllegalArgumentException("Error during parsing");
+        }
     }
-    private void printPrecision(PrintStream out) {
-        out.println("Precision (max iterations):");
-        out.println(getPrecision());
+    private void precisionFromString(String str) throws IllegalArgumentException {
+        try {
+            precision = Integer.parseInt(str);
+            ensureValidPrecision(precision);
+        } catch (NumberFormatException err) {
+            throw new IllegalArgumentException("Error during parsing");
+        }
     }
-    private void printColormap(PrintStream out) {
-        out.println("Colormap:");
-        out.println(getColormap());
+    private void colormapFromString(String str) throws IllegalArgumentException {
+        colormap.fromString(str);
+        ensureValidColormap(colormap);
+    }
+    private void powerFromString(String str) throws IllegalArgumentException {
+        try {
+            power = Integer.parseInt(str);
+            ensureValidPower(power);
+        } catch (NumberFormatException err) {
+            throw new IllegalArgumentException("Error during parsing");
+        }
+    }
+    private void cFromString(String str) throws IllegalArgumentException {
+        c.fromString(str);
+        ensureValidC(c);
+    }
+    private void z0FromString(String str) throws IllegalArgumentException {
+        z0.fromString(str);
+        ensureValidZ0(z0);
     }
     
-    private void printPower(PrintStream out) {
-        out.println("Power:");
-        out.println(getPower());
+    private String boundToString() {
+        return Double.toString(bound);
     }
-    private void printC(PrintStream out) {
-        out.println("c:");
-        out.println(getC());
+    private String precisionToString() {
+        return Integer.toString(precision);
     }
-    private void printZ0(PrintStream out) {
-        out.println("z(0):");
-        out.println(getZ0());
+    private String colormapToString() {
+        return colormap.toString();
+    }
+    private String powerToString() {
+        return Integer.toString(power);
+    }
+    private String cToString() {
+        return c.toString();
+    }
+    private String z0ToString() {
+        return z0.toString();
     }
     
     private void randomizeBound(Random rng) {
-        bound = MIN_BOUND + (MAX_BOUND - MIN_BOUND) * rng.nextDouble();
+        bound = 2.0 + (2.0 - 2.0) * rng.nextDouble();
     }
     private void randomizePrecision(Random rng) {
-        precision = rng.nextInt(MAX_PRECISION - MIN_PRECISION + 1) + MIN_PRECISION;
+        precision = rng.nextInt(300 - 10 + 1) + 10;
     }
     private void randomizeColormap(Random rng) {
         int index1 = rng.nextInt(RANDOM_COLOR_ARR.length);
@@ -359,17 +343,17 @@ public class FractalOptions {
         colormap.set(colorArr);
     }
     private void randomizePower(Random rng) {
-        power = rng.nextInt(MAX_POWER - MIN_POWER + 1) + MIN_POWER;
+        power = rng.nextInt(7 - -7 + 1) + -7;
     }
     private void randomizeC(Random rng) {
-        double x = MIN_C.getX() + (MAX_C.getX() - MIN_C.getX()) * rng.nextDouble();
-        double y = MIN_C.getY() + (MAX_C.getY() - MIN_C.getY()) * rng.nextDouble();
+        double x = -1.0 + (1.0 - -1.0) * rng.nextDouble();
+        double y = -1.0 + (1.0 - -1.0) * rng.nextDouble();
         c.setX(x);
         c.setY(y);
     }
     private void randomizeZ0(Random rng) {
-        double x = MIN_Z0.getX() + (MAX_Z0.getX() - MIN_Z0.getX()) * rng.nextDouble();
-        double y = MIN_Z0.getY() + (MAX_Z0.getY() - MIN_Z0.getY()) * rng.nextDouble();
+        double x = -1.0 + (1.0 - -1.0) * rng.nextDouble();
+        double y = -1.0 + (1.0 - -1.0) * rng.nextDouble();
         z0.setX(x);
         z0.setY(y);
     }
