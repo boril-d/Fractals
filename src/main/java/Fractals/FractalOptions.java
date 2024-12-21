@@ -248,8 +248,8 @@ public class FractalOptions {
         if (c == null) {
             throw new IllegalArgumentException("`c` is null");
         }
-        if (c.getX() < -1 || 1 < c.getX() ||
-            c.getY() < -1 || 1 < c.getY()) {
+        if (c.getX() < -2.0 || 2.0 < c.getX() ||
+            c.getY() < -2.0 || 2.0 < c.getY()) {
             
             throw new IllegalArgumentException("`c` value out of range");
         }
@@ -258,8 +258,8 @@ public class FractalOptions {
         if (z0 == null) {
             throw new IllegalArgumentException("`z0` is null");
         }
-        if (z0.getX() < -1 || 1 < z0.getX() ||
-            z0.getY() < -1 || 1 < z0.getY()) {
+        if (z0.getX() < -2.0 || 2.0 < z0.getX() ||
+            z0.getY() < -2.0 || 2.0 < z0.getY()) {
             
             throw new IllegalArgumentException("`z0` value out of range");
         }

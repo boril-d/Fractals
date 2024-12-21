@@ -5,7 +5,6 @@
 package Fractals;
 
 import java.awt.image.BufferedImage;
-import static java.lang.Math.abs;
 
 /**
  *
@@ -57,7 +56,7 @@ public class Fractal {
         
         for (int i = 0; i < options.getPrecision(); i++) {
             
-            if (abs(z.getX()) > options.getBound() || abs(z.getY()) > options.getBound()) {
+            if (z.getX() * z.getX() + z.getY() * z.getY() > options.getBound() * options.getBound()) {
                 break;
             }
             else {
