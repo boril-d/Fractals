@@ -21,35 +21,17 @@ public class Mandelbrot extends Fractal {
         super(other);
     }
     
-    public BufferedImage getFractalImage(ComplexNum bound1, ComplexNum bound2, int width, int height) {
+    public BufferedImage getFractalImage(int width, int height) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        
-        double left;
-        double right;
-        double up;
-        double down;
-        if (bound1.getX() < bound2.getX()) {
-            left = (bound1.getX());
-            right = (bound2.getX());
-        } else {
-            left = (bound2.getX());
-            right = (bound1.getX());
-        }
-        if (bound1.getY() < bound2.getY()) {
-            down = (bound1.getY());
-            up = (bound2.getY());
-        } else {
-            down = (bound2.getY());
-            up = (bound1.getY());
-        }
-        
-        ComplexNum currCoord = new ComplexNum();
+                
+        double left = getOptions().getLeftBorder();
+        double right = getOptions().getRightBorder();
+        double down = getOptions().getDownBorder();
+        double up = getOptions().getUpBorder();
         
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                currCoord.setX((double)(x) / width * (right - left) + left);
-                currCoord.setY((double)(y) / height * (up - down) + down);
-                getOptions().getC().set(currCoord.getX(), currCoord.getY());
+                getOptions().setC(screenToFractalCoords(x, y, width, height, left, right, down, up));
                 result.setRGB(x, height - y - 1, getColor(getOptions()));
             }
         }

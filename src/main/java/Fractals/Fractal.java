@@ -45,8 +45,17 @@ public class Fractal {
         this.options.set(other.options);
     }
 
-    public BufferedImage getFractalImage(ComplexNum bound1, ComplexNum bound2, int width, int height) {
+    public BufferedImage getFractalImage(int width, int height) {
         return null;
+    }
+    
+    public static ComplexNum screenToFractalCoords(int x, int y, int w, int h, double left, double right, double down, double up) {
+        ComplexNum result = new ComplexNum();
+        
+        result.setX( (double)(x) / w * (right - left) + left );
+        result.setY( (double)(h - y - 1) / h * (up - down) + down );
+        
+        return result;
     }
    
     public int getColor(FractalOptions options) {

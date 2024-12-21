@@ -54,6 +54,11 @@ public class ComplexNum {
         double imgPart = obj1.getY() + obj2.getY();
         return new ComplexNum(realPart, imgPart);
     }
+    public static ComplexNum diff(ComplexNum obj1, ComplexNum obj2) {
+        double realPart = obj1.getX() - obj2.getX();
+        double imgPart = obj1.getY() - obj2.getY();
+        return new ComplexNum(realPart, imgPart);
+    }
     
     public static ComplexNum product(ComplexNum obj1, ComplexNum obj2) {
         double realPart = obj1.getX()*obj2.getX() - obj1.getY()*obj2.getY();

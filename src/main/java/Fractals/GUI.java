@@ -4,6 +4,8 @@
  */
 package Fractals;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.swing.JFileChooser;
 
@@ -16,6 +18,9 @@ public class GUI extends javax.swing.JFrame {
     private Julia julia;
     private Fractal currentFractal;
     
+    private int cnvMouseX;
+    private int cnvMouseY;
+    
     public static final String OPTIONS_DIR = "./saves/";
     
     private File selectFileToLoad() {
@@ -24,6 +29,7 @@ public class GUI extends javax.swing.JFrame {
         
         int ret = expl.showOpenDialog(this);
         if (ret != JFileChooser.APPROVE_OPTION) {
+            System.out.println("garbage");
             return null;
         }
         
@@ -89,7 +95,7 @@ public class GUI extends javax.swing.JFrame {
         btnSave = new javax.swing.JButton();
         btnLoad = new javax.swing.JButton();
         btnDefaultColors = new javax.swing.JButton();
-        btnRender = new javax.swing.JButton();
+        btnResetZoom = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         btnRandomOpt = new javax.swing.JButton();
         txtC = new javax.swing.JTextField();
@@ -190,11 +196,11 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        btnRender.setFont(new java.awt.Font("Dialog", 0, 13)); // NOI18N
-        btnRender.setText("Render");
-        btnRender.addActionListener(new java.awt.event.ActionListener() {
+        btnResetZoom.setFont(new java.awt.Font("Dialog", 0, 13)); // NOI18N
+        btnResetZoom.setText("Reset Zoom");
+        btnResetZoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRenderActionPerformed(evt);
+                btnResetZoomActionPerformed(evt);
             }
         });
 
@@ -234,7 +240,7 @@ public class GUI extends javax.swing.JFrame {
                                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(47, 47, 47))
                             .addComponent(btnRestore, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnRender, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnResetZoom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlOptionsLayout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -305,13 +311,29 @@ public class GUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnColors)
                 .addGap(12, 12, 12)
-                .addComponent(btnRender, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnResetZoom, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLoad)
                     .addComponent(btnSave))
                 .addGap(14, 14, 14))
         );
+
+        pnlCanvas.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                pnlCanvasMouseMoved(evt);
+            }
+        });
+        pnlCanvas.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                pnlCanvasMouseWheelMoved(evt);
+            }
+        });
+        pnlCanvas.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                pnlCanvasKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlCanvasLayout = new javax.swing.GroupLayout(pnlCanvas);
         pnlCanvas.setLayout(pnlCanvasLayout);
@@ -331,7 +353,7 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnlOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(pnlCanvas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(pnlCanvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -343,19 +365,31 @@ public class GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCActionPerformed
-        // TODO add your handling code here:
-        String c = txtC.getText();
-        System.out.print(c);
+        try {
+            currentFractal.getOptions().cFromString(txtC.getText());
+        } catch (Exception err) {
+            txtC.setText(currentFractal.getOptions().cToString());
+        }
+        render();
     }//GEN-LAST:event_txtCActionPerformed
 
     private void btnRandomOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomOptActionPerformed
         currentFractal.getOptions().randomize();
+        System.out.println(currentFractal.getOptions());
         updateOptionsDisplay();
     }//GEN-LAST:event_btnRandomOptActionPerformed
 
-    private void btnRenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRenderActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnRenderActionPerformed
+    private void render() {
+        int width = pnlCanvas.getWidth();
+        int height = pnlCanvas.getHeight();
+        BufferedImage image = currentFractal.getFractalImage(width, height);
+        Graphics graphics = pnlCanvas.getGraphics();
+        graphics.drawImage(image, 0, 0, null);
+    }
+    private void btnResetZoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetZoomActionPerformed
+        currentFractal.getOptions().defaultBorders();
+        render();
+    }//GEN-LAST:event_btnResetZoomActionPerformed
 
     private void btnDefaultColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDefaultColorsActionPerformed
         // TODO add your handling code here:
@@ -397,27 +431,30 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnColorsActionPerformed
 
     private void txtZ0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtZ0ActionPerformed
-        // TODO add your handling code here:
-        String z0 = txtZ0.getText();
-        System.out.print(z0);
-        //if (){
-            txtZ0.setEditable(false);
-            //}
+        try {
+            currentFractal.getOptions().z0FromString(txtZ0.getText());
+        } catch (Exception err) {
+            txtZ0.setText(currentFractal.getOptions().z0ToString());
+        }
+        render();
     }//GEN-LAST:event_txtZ0ActionPerformed
 
     private void txtPowerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPowerActionPerformed
-        // TODO add your handling code here:
-        String power = txtPower.getText();
-        System.out.print(power);
+        try {
+            currentFractal.getOptions().powerFromString(txtPower.getText());
+        } catch (Exception err) {
+            txtPower.setText(currentFractal.getOptions().powerToString());
+        }
+        render();
     }//GEN-LAST:event_txtPowerActionPerformed
 
     private void txtPrecisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecisionActionPerformed
         try {
             currentFractal.getOptions().precisionFromString(txtPrecision.getText());
         } catch (Exception err) {
-            System.out.println("err");
             txtPrecision.setText(currentFractal.getOptions().precisionToString());
         }
+        render();
     }//GEN-LAST:event_txtPrecisionActionPerformed
 
     private void btnRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreActionPerformed
@@ -435,6 +472,7 @@ public class GUI extends javax.swing.JFrame {
             txtC.setEditable(true);
             txtC.setEnabled(true);
             updateOptionsDisplay();
+            render();
         }
 
     }//GEN-LAST:event_radJuliaActionPerformed
@@ -449,8 +487,49 @@ public class GUI extends javax.swing.JFrame {
             txtC.setEditable(false);
             txtC.setEnabled(false);
             updateOptionsDisplay();
+            render();
         }
     }//GEN-LAST:event_radMandelbrotActionPerformed
+
+    private void pnlCanvasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pnlCanvasKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pnlCanvasKeyPressed
+
+    private void pnlCanvasMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_pnlCanvasMouseWheelMoved
+        int moveCount = evt.getWheelRotation();
+                
+        double up = currentFractal.getOptions().getUpBorder();
+        double down = currentFractal.getOptions().getDownBorder();
+        double left = currentFractal.getOptions().getLeftBorder();
+        double right = currentFractal.getOptions().getRightBorder();
+        
+        ComplexNum center = Fractal.screenToFractalCoords(cnvMouseX, cnvMouseY, pnlCanvas.getWidth(), pnlCanvas.getHeight(), left, right, down, up);
+        
+        double upOffset = up - center.getY();
+        double downOffset = down - center.getY();
+        double leftOffset = left - center.getX();
+        double rightOffset = right - center.getX();
+        
+        final double mult = 1.5;
+        
+        upOffset *= Math.pow(mult, moveCount);
+        downOffset *= Math.pow(mult, moveCount);
+        leftOffset *= Math.pow(mult, moveCount);
+        rightOffset *= Math.pow(mult, moveCount);
+        
+        currentFractal.getOptions().setUpBorder(center.getY() + upOffset);
+        currentFractal.getOptions().setDownBorder(center.getY() + downOffset);
+        currentFractal.getOptions().setLeftBorder(center.getX() + leftOffset);
+        currentFractal.getOptions().setRightBorder(center.getX() + rightOffset);
+        
+        render();
+    }//GEN-LAST:event_pnlCanvasMouseWheelMoved
+
+    private void pnlCanvasMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlCanvasMouseMoved
+        cnvMouseX = evt.getX();
+        cnvMouseY = evt.getY();
+        //System.out.format("%d %d\n", cnvMouseX, cnvMouseY);
+    }//GEN-LAST:event_pnlCanvasMouseMoved
 
     /**
      * @param args the command line arguments
@@ -478,10 +557,15 @@ public class GUI extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } //</editor-fold> //</editor-fold>
 
+        GUI gui = new GUI();
+        gui.setVisible(true);
+        gui.render();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI().setVisible(true);
+                //GUI gui = new GUI();
+                //gui.setVisible(true);
+                //gui.render();
             }
         });
     }
@@ -491,7 +575,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton btnDefaultColors;
     private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnRandomOpt;
-    private javax.swing.JButton btnRender;
+    private javax.swing.JButton btnResetZoom;
     private javax.swing.JButton btnRestore;
     private javax.swing.JButton btnSave;
     private javax.swing.ButtonGroup buttonGroup1;

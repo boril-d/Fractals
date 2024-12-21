@@ -30,6 +30,11 @@ public class FractalOptions {
     };
     public static final Colormap DEFAULT_COLORMAP = new Colormap(DEFAULT_COLOR_ARR);
     
+    private double upBorder;
+    private double downBorder;
+    private double leftBorder;
+    private double rightBorder;
+    
     /**
      * @brief Unless the function exits these bounds, it is considered a part of
      * the fractal set.
@@ -53,6 +58,35 @@ public class FractalOptions {
     private int power;
     private ComplexNum c;
     private ComplexNum z0;
+
+    //<editor-fold defaultstate="collapsed" desc="getters and setters">
+    public double getUpBorder() {
+        return upBorder;
+    }
+    public void setUpBorder(double upBorder) {
+        this.upBorder = upBorder;
+    }
+
+    public double getDownBorder() {
+        return downBorder;
+    }
+    public void setDownBorder(double downBorder) {
+        this.downBorder = downBorder;
+    }
+
+    public double getLeftBorder() {
+        return leftBorder;
+    }
+    public void setLeftBorder(double leftBorder) {
+        this.leftBorder = leftBorder;
+    }
+
+    public double getRightBorder() {
+        return rightBorder;
+    }
+    public void setRightBorder(double rightBorder) {
+        this.rightBorder = rightBorder;
+    }
 
     public double getBound() {
         return bound;
@@ -101,14 +135,16 @@ public class FractalOptions {
         ensureValidZ0(z0);
         this.z0 = z0;
     }
+    //</editor-fold>
     
     public FractalOptions() {
         bound = 2.0;
         precision = 50;
         colormap = new Colormap(DEFAULT_COLORMAP);
         power = 2;
-        c = new ComplexNum(0.4, 0.0);
+        c = new ComplexNum(0.4, 0.3);
         z0 = new ComplexNum(0.0, 0.0);
+        defaultBorders();
     }
     public FractalOptions(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) throws IllegalArgumentException {
        set(bound, precision, clrmap, power, c, z0);
@@ -120,6 +156,7 @@ public class FractalOptions {
         power = other.power;
         c = new ComplexNum(other.c);
         z0 = new ComplexNum(other.z0);
+        defaultBorders();
     }
     
     public void set() {
@@ -127,8 +164,9 @@ public class FractalOptions {
         precision = 50;
         colormap.set(DEFAULT_COLORMAP);
         power = 2;
-        c.set(0.4, 0.0);
+        c.set(0.4, 0.3);
         z0.set(0.0, 0.0);
+        defaultBorders();
     }
     public void set(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) throws IllegalArgumentException {
         setBound(bound);
@@ -137,6 +175,7 @@ public class FractalOptions {
         setPower(power);
         setC(c);
         setZ0(z0);
+        defaultBorders();
     }
     public void set(FractalOptions other) {
         bound = other.bound;
@@ -145,6 +184,7 @@ public class FractalOptions {
         power = other.power;
         c.set(other.c);
         z0.set(other.z0);
+        defaultBorders();
     }
     
     public void save(File file) throws FileSystemException, FileNotFoundException, IOException {
@@ -248,8 +288,8 @@ public class FractalOptions {
         if (c == null) {
             throw new IllegalArgumentException("`c` is null");
         }
-        if (c.getX() < -2.0 || 2.0 < c.getX() ||
-            c.getY() < -2.0 || 2.0 < c.getY()) {
+        if (c.getX() < -2 || 2 < c.getX() ||
+            c.getY() < -2 || 2 < c.getY()) {
             
             throw new IllegalArgumentException("`c` value out of range");
         }
@@ -258,8 +298,8 @@ public class FractalOptions {
         if (z0 == null) {
             throw new IllegalArgumentException("`z0` is null");
         }
-        if (z0.getX() < -2.0 || 2.0 < z0.getX() ||
-            z0.getY() < -2.0 || 2.0 < z0.getY()) {
+        if (z0.getX() < -2 || 2 < z0.getX() ||
+            z0.getY() < -2 || 2 < z0.getY()) {
             
             throw new IllegalArgumentException("`z0` value out of range");
         }
@@ -331,6 +371,13 @@ public class FractalOptions {
         return z0.toString();
     }
     
+    public void defaultBorders() {
+        upBorder = 2.0;
+        downBorder = -2.0;
+        leftBorder = -2.0;
+        rightBorder = 2.0;
+    }
+    
     public void randomizeBound(Random rng) {
         bound = 2.0 + (2.0 - 2.0) * rng.nextDouble();
     }
@@ -353,7 +400,7 @@ public class FractalOptions {
         colormap.set(colorArr);
     }
     public void randomizePower(Random rng) {
-        power = rng.nextInt(7 - -7 + 1) + -7;
+        power = rng.nextInt(7 - 2 + 1) + 2;
     }
     public void randomizeC(Random rng) {
         double x = -1.0 + (1.0 - -1.0) * rng.nextDouble();
