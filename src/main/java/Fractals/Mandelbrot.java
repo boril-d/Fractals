@@ -50,7 +50,7 @@ public class Mandelbrot extends Fractal {
                 currCoord.setX((double)(x) / width * (right - left) + left);
                 currCoord.setY((double)(y) / height * (up - down) + down);
                 getOptions().getC().set(currCoord.getX(), currCoord.getY());
-                result.setRGB(x, height - y - 1, getColor());
+                result.setRGB(x, height - y - 1, getColor(getOptions()));
             }
         }
         

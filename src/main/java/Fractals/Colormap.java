@@ -43,6 +43,9 @@ public final class Colormap {
     }
     public void set(String[] colors) throws IllegalArgumentException {
         ensureValid(colors);
+        for (int i = 0; i < colors.length; i++) {
+            ensureValid(colors[i]);
+        }
         
         this.colors = new int[colors.length];
         for (int i = 0; i < colors.length; i++) {

@@ -221,22 +221,22 @@ public class FractalOptions {
     // ctrl+shift+minus
     //<editor-fold defaultstate="collapsed" desc="helper functions">
     
-    private static void ensureValidBound(double bound) throws IllegalArgumentException {
+    public static void ensureValidBound(double bound) throws IllegalArgumentException {
         if (bound < 2.0 || 2.0 < bound) {
             throw new IllegalArgumentException("`bound` value out of range");
         }
     }
-    private static void ensureValidPrecision(int precision) throws IllegalArgumentException {
+    public static void ensureValidPrecision(int precision) throws IllegalArgumentException {
         if (precision < 10 || 300 < precision) {
             throw new IllegalArgumentException("`precision` value out of range");
         }
     }
-    private static void ensureValidColormap(Colormap colormap) throws IllegalArgumentException {
+    public static void ensureValidColormap(Colormap colormap) throws IllegalArgumentException {
         if (colormap == null) {
             throw new IllegalArgumentException("`colormap` is null");
         }
     }
-    private static void ensureValidPower(int power) throws IllegalArgumentException {
+    public static void ensureValidPower(int power) throws IllegalArgumentException {
         if (power < -7 || 7 < power) {
             throw new IllegalArgumentException("`power` value out of range");
         }
@@ -244,7 +244,7 @@ public class FractalOptions {
             throw new IllegalArgumentException("`power` must not be -1, 0 or 1 (I am sure you see why)");
         }
     }
-    private static void ensureValidC(ComplexNum c) throws IllegalArgumentException {
+    public static void ensureValidC(ComplexNum c) throws IllegalArgumentException {
         if (c == null) {
             throw new IllegalArgumentException("`c` is null");
         }
@@ -254,7 +254,7 @@ public class FractalOptions {
             throw new IllegalArgumentException("`c` value out of range");
         }
     }
-    private static void ensureValidZ0(ComplexNum z0) throws IllegalArgumentException {
+    public static void ensureValidZ0(ComplexNum z0) throws IllegalArgumentException {
         if (z0 == null) {
             throw new IllegalArgumentException("`z0` is null");
         }
@@ -265,69 +265,79 @@ public class FractalOptions {
         }
     }
     
-    private void boundFromString(String str) throws IllegalArgumentException {
+    public void boundFromString(String str) throws IllegalArgumentException {
+        double bound;
         try {
             bound = Double.parseDouble(str);
             ensureValidBound(bound);
         } catch (NumberFormatException err) {
             throw new IllegalArgumentException("Error during parsing");
         }
+        this.bound = bound;
     }
-    private void precisionFromString(String str) throws IllegalArgumentException {
+    public void precisionFromString(String str) throws IllegalArgumentException {
+        int precision;
         try {
             precision = Integer.parseInt(str);
             ensureValidPrecision(precision);
         } catch (NumberFormatException err) {
             throw new IllegalArgumentException("Error during parsing");
         }
+        this.precision = precision;
     }
-    private void colormapFromString(String str) throws IllegalArgumentException {
+    public void colormapFromString(String str) throws IllegalArgumentException {
         colormap.fromString(str);
         ensureValidColormap(colormap);
     }
-    private void powerFromString(String str) throws IllegalArgumentException {
+    public void powerFromString(String str) throws IllegalArgumentException {
+        int power;
         try {
             power = Integer.parseInt(str);
             ensureValidPower(power);
         } catch (NumberFormatException err) {
             throw new IllegalArgumentException("Error during parsing");
         }
+        this.power = power;
     }
-    private void cFromString(String str) throws IllegalArgumentException {
+    public void cFromString(String str) throws IllegalArgumentException {
+        ComplexNum c = new ComplexNum();
         c.fromString(str);
         ensureValidC(c);
+        this.c = c;
     }
-    private void z0FromString(String str) throws IllegalArgumentException {
+    public void z0FromString(String str) throws IllegalArgumentException {
+        ComplexNum z0 = new ComplexNum();
         z0.fromString(str);
         ensureValidZ0(z0);
+        this.z0 = z0;
     }
     
-    private String boundToString() {
+    public String boundToString() {
         return Double.toString(bound);
     }
-    private String precisionToString() {
+    public String precisionToString() {
         return Integer.toString(precision);
     }
-    private String colormapToString() {
+    public String colormapToString() {
         return colormap.toString();
     }
-    private String powerToString() {
+    public String powerToString() {
         return Integer.toString(power);
     }
-    private String cToString() {
+    public String cToString() {
         return c.toString();
     }
-    private String z0ToString() {
+    public String z0ToString() {
         return z0.toString();
     }
     
-    private void randomizeBound(Random rng) {
+    public void randomizeBound(Random rng) {
         bound = 2.0 + (2.0 - 2.0) * rng.nextDouble();
     }
-    private void randomizePrecision(Random rng) {
+    public void randomizePrecision(Random rng) {
         precision = rng.nextInt(300 - 10 + 1) + 10;
     }
-    private void randomizeColormap(Random rng) {
+    public void randomizeColormap(Random rng) {
         int index1 = rng.nextInt(RANDOM_COLOR_ARR.length);
         int index2 = rng.nextInt(RANDOM_COLOR_ARR.length - 1);
         
@@ -342,16 +352,16 @@ public class FractalOptions {
         };
         colormap.set(colorArr);
     }
-    private void randomizePower(Random rng) {
+    public void randomizePower(Random rng) {
         power = rng.nextInt(7 - -7 + 1) + -7;
     }
-    private void randomizeC(Random rng) {
+    public void randomizeC(Random rng) {
         double x = -1.0 + (1.0 - -1.0) * rng.nextDouble();
         double y = -1.0 + (1.0 - -1.0) * rng.nextDouble();
         c.setX(x);
         c.setY(y);
     }
-    private void randomizeZ0(Random rng) {
+    public void randomizeZ0(Random rng) {
         double x = -1.0 + (1.0 - -1.0) * rng.nextDouble();
         double y = -1.0 + (1.0 - -1.0) * rng.nextDouble();
         z0.setX(x);

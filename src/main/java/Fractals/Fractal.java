@@ -50,7 +50,7 @@ public class Fractal {
         return null;
     }
    
-    public int getColor() {
+    public int getColor(FractalOptions options) {
         
         ComplexNum z = new ComplexNum(options.getZ0());
         int iterations = 0;

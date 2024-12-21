@@ -6,7 +6,6 @@ package Fractals;
 
 import java.io.File;
 import javax.swing.JFileChooser;
-import javax.swing.JTextField;
 
 /**
  *
@@ -17,26 +16,25 @@ public class GUI extends javax.swing.JFrame {
     private Julia julia;
     private Fractal currentFractal;
     
-    public static final String SAVES_DIR = "./saves/";
-    public static final String SAVES_EXTENSION = ".fopts";
+    public static final String OPTIONS_DIR = "./saves/";
     
-    private File selectSaveToOpen() {
+    private File selectFileToLoad() {
         JFileChooser expl = new JFileChooser();
-        expl.setCurrentDirectory(new File(SAVES_DIR));
+        expl.setCurrentDirectory(new File(OPTIONS_DIR));
         
         int ret = expl.showOpenDialog(this);
-        if (ret != expl.APPROVE_OPTION) {
+        if (ret != JFileChooser.APPROVE_OPTION) {
             return null;
         }
         
         return expl.getSelectedFile();
     }
-    private File selectSaveToSave() {
+    private File selectFileToSave() {
         JFileChooser expl = new JFileChooser();
-        expl.setCurrentDirectory(new File(SAVES_DIR));
+        expl.setCurrentDirectory(new File(OPTIONS_DIR));
         
         int ret = expl.showSaveDialog(this);
-        if (ret != expl.APPROVE_OPTION) {
+        if (ret != JFileChooser.APPROVE_OPTION) {
             return null;
         }
         
@@ -44,10 +42,10 @@ public class GUI extends javax.swing.JFrame {
     }
     
     private void updateOptionsDisplay() {
-        txtPrecision.setText(Integer.toString(currentFractal.getOptions().getPrecision()));
-        txtPower.setText(Integer.toString(currentFractal.getOptions().getPower()));
-        txtZ0.setText(currentFractal.getOptions().getZ0().toString());
-        txtC.setText(currentFractal.getOptions().getC().toString());
+        txtPrecision.setText(currentFractal.getOptions().precisionToString());
+        txtPower.setText(currentFractal.getOptions().powerToString());
+        txtZ0.setText(currentFractal.getOptions().z0ToString());
+        txtC.setText(currentFractal.getOptions().cToString());
     }
 
     /**
@@ -57,8 +55,12 @@ public class GUI extends javax.swing.JFrame {
         initComponents();
         mandelbrot = new Mandelbrot();
         julia = new Julia();
+        
         currentFractal = mandelbrot;
-
+        txtZ0.setEditable(true);
+        txtZ0.setEnabled(true);
+        txtC.setEditable(false);
+        txtC.setEnabled(false);
         updateOptionsDisplay();
     }
 
@@ -127,7 +129,7 @@ public class GUI extends javax.swing.JFrame {
         });
 
         jLabel2.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jLabel2.setText("Precision:");
+        jLabel2.setText("precision =");
 
         txtPrecision.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,7 +141,7 @@ public class GUI extends javax.swing.JFrame {
         jLabel1.setText("Colors");
 
         jLabel3.setFont(new java.awt.Font("Calibri", 0, 16)); // NOI18N
-        jLabel3.setText("power of z =");
+        jLabel3.setText("power =");
 
         txtPower.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -235,7 +237,7 @@ public class GUI extends javax.swing.JFrame {
                             .addComponent(btnRender, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlOptionsLayout.createSequentialGroup()
                                 .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtPrecision))
                             .addGroup(pnlOptionsLayout.createSequentialGroup()
                                 .addComponent(btnSave)
@@ -243,22 +245,15 @@ public class GUI extends javax.swing.JFrame {
                                 .addComponent(btnLoad))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlOptionsLayout.createSequentialGroup()
                                 .addGroup(pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4)
                                     .addComponent(jLabel3)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(txtPower)
                                     .addComponent(txtZ0)
-                                    .addComponent(txtC))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addComponent(txtC))))
                         .addContainerGap())))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOptionsLayout.createSequentialGroup()
-                .addGap(0, 8, Short.MAX_VALUE)
-                .addComponent(radMandelbrot)
-                .addGap(18, 18, 18)
-                .addComponent(radJulia)
-                .addGap(12, 12, 12))
             .addGroup(pnlOptionsLayout.createSequentialGroup()
                 .addGap(67, 67, 67)
                 .addComponent(btnColors)
@@ -267,6 +262,12 @@ public class GUI extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnDefaultColors)
                 .addGap(45, 45, 45))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOptionsLayout.createSequentialGroup()
+                .addGap(0, 8, Short.MAX_VALUE)
+                .addComponent(radMandelbrot)
+                .addGap(18, 18, 18)
+                .addComponent(radJulia)
+                .addGap(12, 12, 12))
         );
         pnlOptionsLayout.setVerticalGroup(
             pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,62 +342,29 @@ public class GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnRenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRenderActionPerformed
+    private void txtCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnRenderActionPerformed
-
-    private void radMandelbrotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radMandelbrotActionPerformed
-        // TODO add your handling code here:
-        
-        if (radMandelbrot.isEnabled()) {
-            txtZ0.setEditable(true);
-            txtC.setEditable(false);
-        }
-    }//GEN-LAST:event_radMandelbrotActionPerformed
-
-    private void radJuliaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radJuliaActionPerformed
-        // TODO add your handling code here:
-        
-        if (radJulia.isEnabled()) {
-            txtZ0.setEditable(false);
-            txtC.setEditable(true);
-        }
-        
-    }//GEN-LAST:event_radJuliaActionPerformed
-
-    private void txtPrecisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecisionActionPerformed
-        try {
-            currentFractal.getOptions().setPrecision(Integer.parseInt(txtPrecision.getText()));
-        } catch (Exception err) {
-            txtPrecision.setText(Integer.toString(currentFractal.getOptions().getPrecision()));
-        }
-    }//GEN-LAST:event_txtPrecisionActionPerformed
+        String c = txtC.getText();
+        System.out.print(c);
+    }//GEN-LAST:event_txtCActionPerformed
 
     private void btnRandomOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomOptActionPerformed
         currentFractal.getOptions().randomize();
         updateOptionsDisplay();
     }//GEN-LAST:event_btnRandomOptActionPerformed
 
-    private void btnRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreActionPerformed
-        currentFractal.getOptions().set();
-        updateOptionsDisplay();
-    }//GEN-LAST:event_btnRestoreActionPerformed
+    private void btnRenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRenderActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRenderActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        File file = selectSaveToSave();
-        if (file == null) {
-            return;
-        }
-        try {
-            currentFractal.getOptions().save(file);
-        } catch (Exception err) {
-            System.out.println("An error occured during save...");
-            System.out.println(err.getMessage());
-        }
-    }//GEN-LAST:event_btnSaveActionPerformed
+    private void btnDefaultColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDefaultColorsActionPerformed
+        // TODO add your handling code here:
+
+        currentFractal.getOptions().setColormap(new Colormap(currentFractal.getOptions().DEFAULT_COLORMAP));
+    }//GEN-LAST:event_btnDefaultColorsActionPerformed
 
     private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
-        File file = selectSaveToOpen();
+        File file = selectFileToLoad();
         if (file == null) {
             return;
         }
@@ -409,11 +377,33 @@ public class GUI extends javax.swing.JFrame {
 
         updateOptionsDisplay();
     }//GEN-LAST:event_btnLoadActionPerformed
-    private void btnDefaultColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDefaultColorsActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        File file = selectFileToSave();
+        if (file == null) {
+            return;
+        }
+        try {
+            currentFractal.getOptions().save(file);
+        } catch (Exception err) {
+            System.out.println("An error occured during save...");
+            System.out.println(err.getMessage());
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorsActionPerformed
         // TODO add your handling code here:
-        
-        currentFractal.getOptions().setColormap(new Colormap(currentFractal.getOptions().DEFAULT_COLORMAP));
-    }//GEN-LAST:event_btnDefaultColorsActionPerformed
+
+    }//GEN-LAST:event_btnColorsActionPerformed
+
+    private void txtZ0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtZ0ActionPerformed
+        // TODO add your handling code here:
+        String z0 = txtZ0.getText();
+        System.out.print(z0);
+        //if (){
+            txtZ0.setEditable(false);
+            //}
+    }//GEN-LAST:event_txtZ0ActionPerformed
 
     private void txtPowerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPowerActionPerformed
         // TODO add your handling code here:
@@ -421,25 +411,46 @@ public class GUI extends javax.swing.JFrame {
         System.out.print(power);
     }//GEN-LAST:event_txtPowerActionPerformed
 
-    private void txtZ0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtZ0ActionPerformed
+    private void txtPrecisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecisionActionPerformed
+        try {
+            currentFractal.getOptions().precisionFromString(txtPrecision.getText());
+        } catch (Exception err) {
+            System.out.println("err");
+            txtPrecision.setText(currentFractal.getOptions().precisionToString());
+        }
+    }//GEN-LAST:event_txtPrecisionActionPerformed
+
+    private void btnRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreActionPerformed
+        currentFractal.getOptions().set();
+        updateOptionsDisplay();
+    }//GEN-LAST:event_btnRestoreActionPerformed
+
+    private void radJuliaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radJuliaActionPerformed
         // TODO add your handling code here:
-        String z0 = txtZ0.getText();
-        System.out.print(z0);
-       //if (){
+
+        if (radJulia.isEnabled()) {
+            currentFractal = julia;
             txtZ0.setEditable(false);
-        //}
-    }//GEN-LAST:event_txtZ0ActionPerformed
+            txtZ0.setEnabled(false);
+            txtC.setEditable(true);
+            txtC.setEnabled(true);
+            updateOptionsDisplay();
+        }
 
-    private void txtCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCActionPerformed
-        // TODO add your handling code here:
-        String c = txtC.getText();
-        System.out.print(c);
-    }//GEN-LAST:event_txtCActionPerformed
+    }//GEN-LAST:event_radJuliaActionPerformed
 
-    private void btnColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorsActionPerformed
+    private void radMandelbrotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radMandelbrotActionPerformed
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_btnColorsActionPerformed
+
+        if (radMandelbrot.isEnabled()) {
+            currentFractal = mandelbrot;
+            txtZ0.setEditable(true);
+            txtZ0.setEnabled(true);
+            txtC.setEditable(false);
+            txtC.setEnabled(false);
+            updateOptionsDisplay();
+        }
+    }//GEN-LAST:event_radMandelbrotActionPerformed
 
     /**
      * @param args the command line arguments
@@ -465,7 +476,7 @@ public class GUI extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } //</editor-fold>
+        } //</editor-fold> //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

@@ -51,7 +51,7 @@ public class Julia extends Fractal {
                 currCoord.setY((double)(y) / height * (up - down) + down);
                 getOptions().getZ0().setX(currCoord.getX());
                 getOptions().getZ0().setY(currCoord.getY());
-                result.setRGB(x, height - y - 1, getColor());
+                result.setRGB(x, height - y - 1, getColor(getOptions()));
             }
         }
         
