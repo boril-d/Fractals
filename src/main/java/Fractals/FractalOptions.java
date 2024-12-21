@@ -127,7 +127,7 @@ public class FractalOptions {
         precision = 50;
         colormap.set(DEFAULT_COLORMAP);
         power = 2;
-        c.set(0.0, 0.0);
+        c.set(0.4, 0.0);
         z0.set(0.0, 0.0);
     }
     public void set(double bound, int precision, Colormap clrmap, int power, ComplexNum c, ComplexNum z0) throws IllegalArgumentException {
