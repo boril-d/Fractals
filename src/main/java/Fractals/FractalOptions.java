@@ -124,7 +124,7 @@ public class FractalOptions {
         return c;
     }
     public void setC(ComplexNum c) throws IllegalArgumentException {
-        ensureValidC(c);
+        //ensureValidC(c);
         this.c = c;
     }
 
@@ -132,7 +132,7 @@ public class FractalOptions {
         return z0;
     }
     public void setZ0(ComplexNum z0) throws IllegalArgumentException {
-        ensureValidZ0(z0);
+        //ensureValidZ0(z0);
         this.z0 = z0;
     }
     //</editor-fold>

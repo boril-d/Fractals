@@ -320,6 +320,9 @@ public class GUI extends javax.swing.JFrame {
         );
 
         pnlCanvas.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                pnlCanvasMouseDragged(evt);
+            }
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 pnlCanvasMouseMoved(evt);
             }
@@ -375,8 +378,8 @@ public class GUI extends javax.swing.JFrame {
 
     private void btnRandomOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomOptActionPerformed
         currentFractal.getOptions().randomize();
-        System.out.println(currentFractal.getOptions());
         updateOptionsDisplay();
+        render();
     }//GEN-LAST:event_btnRandomOptActionPerformed
 
     private void render() {
@@ -410,6 +413,7 @@ public class GUI extends javax.swing.JFrame {
         }
 
         updateOptionsDisplay();
+        render();
     }//GEN-LAST:event_btnLoadActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -460,6 +464,7 @@ public class GUI extends javax.swing.JFrame {
     private void btnRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreActionPerformed
         currentFractal.getOptions().set();
         updateOptionsDisplay();
+        render();
     }//GEN-LAST:event_btnRestoreActionPerformed
 
     private void radJuliaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radJuliaActionPerformed
@@ -503,7 +508,10 @@ public class GUI extends javax.swing.JFrame {
         double left = currentFractal.getOptions().getLeftBorder();
         double right = currentFractal.getOptions().getRightBorder();
         
-        ComplexNum center = Fractal.screenToFractalCoords(cnvMouseX, cnvMouseY, pnlCanvas.getWidth(), pnlCanvas.getHeight(), left, right, down, up);
+        ComplexNum center = Fractal.screenToFractalCoords(
+                cnvMouseX, cnvMouseY, pnlCanvas.getWidth(), pnlCanvas.getHeight(),
+                left, right, down, up
+        );
         
         double upOffset = up - center.getY();
         double downOffset = down - center.getY();
@@ -528,8 +536,27 @@ public class GUI extends javax.swing.JFrame {
     private void pnlCanvasMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlCanvasMouseMoved
         cnvMouseX = evt.getX();
         cnvMouseY = evt.getY();
-        //System.out.format("%d %d\n", cnvMouseX, cnvMouseY);
     }//GEN-LAST:event_pnlCanvasMouseMoved
+
+    private void pnlCanvasMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlCanvasMouseDragged
+        double up = currentFractal.getOptions().getUpBorder();
+        double down = currentFractal.getOptions().getDownBorder();
+        double left = currentFractal.getOptions().getLeftBorder();
+        double right = currentFractal.getOptions().getRightBorder();
+        
+        double offsetX = (double)(evt.getX() - cnvMouseX) * (right - left) / pnlCanvas.getWidth();
+        double offsetY = (double)(evt.getY() - cnvMouseY) * (up - down) / pnlCanvas.getHeight();
+        
+        currentFractal.getOptions().setLeftBorder(left - offsetX);
+        currentFractal.getOptions().setRightBorder(right - offsetX);
+        currentFractal.getOptions().setDownBorder(down + offsetY);
+        currentFractal.getOptions().setUpBorder(up + offsetY);
+        
+        cnvMouseX = evt.getX();
+        cnvMouseY = evt.getY();
+        
+        render();
+    }//GEN-LAST:event_pnlCanvasMouseDragged
 
     /**
      * @param args the command line arguments
@@ -555,7 +582,7 @@ public class GUI extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } //</editor-fold> //</editor-fold>
+        } //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold>
 
         GUI gui = new GUI();
         gui.setVisible(true);

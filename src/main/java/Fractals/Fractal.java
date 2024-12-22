@@ -52,8 +52,8 @@ public class Fractal {
     public static ComplexNum screenToFractalCoords(int x, int y, int w, int h, double left, double right, double down, double up) {
         ComplexNum result = new ComplexNum();
         
-        result.setX( (double)(x) / w * (right - left) + left );
-        result.setY( (double)(h - y - 1) / h * (up - down) + down );
+        result.setX( (double)(x) * (right - left) / w + left );
+        result.setY( (double)(h - y - 1) * (up - down) / h + down );
         
         return result;
     }
@@ -74,6 +74,20 @@ public class Fractal {
             } 
         }
         
+        if (iterations == options.getPrecision()) {
+            return 0xff000000;
+        }
+        /*
+        int r = Math.min(255, (int)Math.max(0, 255 * (double)(iterations - 8) / iterations));
+        int g = Math.min(255, (int)Math.max(0, 255 * (double)(iterations - 8) / iterations));
+        int b = Math.min(255, (int)Math.max(0, 255 * (double)(iterations - 2) / iterations));
+        
+        int result = 0xff000000;
+        result |= r << 16;
+        result |= g << 8;
+        result |= b;
+        return result;
+        //*/
         return options.getColormap().getColor((double)(iterations)/options.getPrecision());
     }
 }

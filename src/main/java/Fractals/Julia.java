@@ -32,7 +32,7 @@ public class Julia extends Fractal {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 getOptions().setZ0(screenToFractalCoords(x, y, width, height, left, right, down, up));
-                result.setRGB(x, height - y - 1, getColor(getOptions()));
+                result.setRGB(x, y, getColor(getOptions()));
             }
         }
         
