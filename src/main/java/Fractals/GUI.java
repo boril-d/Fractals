@@ -18,7 +18,6 @@ public class GUI extends javax.swing.JFrame {
     private Mandelbrot mandelbrot;
     private Julia julia;
     private Fractal currentFractal;
-    private Colormap colormap;
     
     private int cnvMouseX;
     private int cnvMouseY;
@@ -63,7 +62,6 @@ public class GUI extends javax.swing.JFrame {
         initComponents();
         mandelbrot = new Mandelbrot();
         julia = new Julia();
-        colormap = new Colormap();
         
         currentFractal = mandelbrot;
         txtZ0.setEditable(true);
@@ -432,31 +430,15 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorsActionPerformed
-        String temp = JOptionPane.showInputDialog("List the desired colours(e.g. #FF0000FF #00FF00FF):");
-
+        String temp;
+        temp = JOptionPane.showInputDialog("List the desired colours(e.g. #FF0000FF #00FF00FF):");
         if (temp != null) {
             try {
-                if (temp.contains(",") || temp.contains(";")) {
-                    throw new IllegalArgumentException("Colors must be separated by a single whitespace, not commas, semicolons, or other characters.");
-                }
-
-                String[] colors = temp.split("\\s+");
-
-                if (colors.length < 2) {
-                    throw new IllegalArgumentException("You must provide at least 2 colors.");
-                }
-
-                for (String color : colors) {
-                    if (!color.matches("#?[0-9a-fA-F]{6}([0-9a-fA-F]{2})?")) {
-                        throw new IllegalArgumentException("Each color must be in the format (#rrggbbaa) or (#RRGGBBAA).");
-                    }
-                }
-                colormap.fromString(temp);
+                currentFractal.getOptions().getColormap().fromString(temp);
                 render();
-                pnlCanvas.repaint();
             } catch (IllegalArgumentException e) {
                 JOptionPane.showMessageDialog(null,
-                        "Invalid color format. " + e.getMessage(),
+                        "Invalid color format. Please try again.\nColors must be listed as (#rrggbbaa) or (#RRGGBBAA) with a single space between them.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
