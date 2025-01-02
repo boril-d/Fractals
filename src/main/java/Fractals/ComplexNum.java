@@ -68,7 +68,8 @@ public class ComplexNum {
     
     public static ComplexNum reciprocal(ComplexNum obj) throws ArithmeticException {
         if (obj.getX() == 0 && obj.getY() == 0) {
-            throw new ArithmeticException("Division by 0!");
+            return new ComplexNum(0, 0);
+            //throw new ArithmeticException("Division by 0!");
         }
         double realPart = obj.x / (obj.x*obj.x + obj.y*obj.y);
         double imgPart = -obj.y / (obj.x*obj.x + obj.y*obj.y);

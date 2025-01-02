@@ -29,7 +29,6 @@ public class Mandelbrot extends Fractal {
         double down = getOptions().getDownBorder();
         double up = getOptions().getUpBorder();
         
-        
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 getOptions().setC(screenToFractalCoords(x, y, width, height, left, right, down, up));

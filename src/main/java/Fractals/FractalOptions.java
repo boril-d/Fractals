@@ -280,8 +280,8 @@ public class FractalOptions {
         if (power < -7 || 7 < power) {
             throw new IllegalArgumentException("`power` value out of range");
         }
-        if (power == -1 || power == 0 || power == 1) {
-            throw new IllegalArgumentException("`power` must not be -1, 0 or 1 (I am sure you see why)");
+        if (power == 0 || power == 1) {
+            throw new IllegalArgumentException("`power` must not be 0 or 1 (I am sure you see why)");
         }
     }
     public static void ensureValidC(ComplexNum c) throws IllegalArgumentException {
