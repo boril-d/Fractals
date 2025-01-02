@@ -1,0 +1,12 @@
+bound:
+2.0
+precision:
+50
+colormap:
+#000000 #0000ff #ffffff #ffffff
+power:
+2
+c:
+1.9925233644859812 -2.0
+z(0):
+0.0 0.0
