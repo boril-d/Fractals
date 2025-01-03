@@ -30,7 +30,7 @@ public class GUI extends javax.swing.JFrame {
         
         int ret = expl.showOpenDialog(this);
         if (ret != JFileChooser.APPROVE_OPTION) {
-            System.out.println("garbage");
+            // the user has cancelled the operation; return `null`
             return null;
         }
         
@@ -42,6 +42,7 @@ public class GUI extends javax.swing.JFrame {
         
         int ret = expl.showSaveDialog(this);
         if (ret != JFileChooser.APPROVE_OPTION) {
+            // the user has cancelled the operation; return `null`
             return null;
         }
         
@@ -230,6 +231,12 @@ public class GUI extends javax.swing.JFrame {
         pnlOptions.setLayout(pnlOptionsLayout);
         pnlOptionsLayout.setHorizontalGroup(
             pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOptionsLayout.createSequentialGroup()
+                .addGap(0, 8, Short.MAX_VALUE)
+                .addComponent(radMandelbrot)
+                .addGap(18, 18, 18)
+                .addComponent(radJulia)
+                .addGap(12, 12, 12))
             .addGroup(pnlOptionsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,21 +267,16 @@ public class GUI extends javax.swing.JFrame {
                                     .addComponent(txtPower)
                                     .addComponent(txtZ0)
                                     .addComponent(txtC))))
-                        .addContainerGap())))
-            .addGroup(pnlOptionsLayout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addComponent(btnColors)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOptionsLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnDefaultColors)
-                .addGap(45, 45, 45))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOptionsLayout.createSequentialGroup()
-                .addGap(0, 8, Short.MAX_VALUE)
-                .addComponent(radMandelbrot)
-                .addGap(18, 18, 18)
-                .addComponent(radJulia)
-                .addGap(12, 12, 12))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOptionsLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOptionsLayout.createSequentialGroup()
+                                .addComponent(btnDefaultColors)
+                                .addGap(45, 45, 45))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOptionsLayout.createSequentialGroup()
+                                .addComponent(btnColors)
+                                .addGap(57, 57, 57))))))
         );
         pnlOptionsLayout.setVerticalGroup(
             pnlOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -403,6 +405,7 @@ public class GUI extends javax.swing.JFrame {
     private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
         File file = selectFileToLoad();
         if (file == null) {
+            // the user has cancelled the operation; do nothing
             return;
         }
         try {
@@ -410,6 +413,8 @@ public class GUI extends javax.swing.JFrame {
         } catch (Exception err) {
             System.out.println("An error occured during load...");
             System.out.println(err.getMessage());
+            // reset to the default fractal
+            currentFractal.getOptions().set();
         }
 
         updateOptionsDisplay();
@@ -419,6 +424,7 @@ public class GUI extends javax.swing.JFrame {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         File file = selectFileToSave();
         if (file == null) {
+            // the user has cancelled the operation; do nothing
             return;
         }
         try {
@@ -431,7 +437,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void btnColorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorsActionPerformed
         String temp;
-        temp = JOptionPane.showInputDialog("List the desired colours(e.g. #FF0000FF #00FF00FF):");
+        temp = JOptionPane.showInputDialog("List the desired colours (e.g. #FF0000FF #00FF00FF):");
         if (temp != null) {
             try {
                 currentFractal.getOptions().getColormap().fromString(temp);
@@ -592,7 +598,7 @@ public class GUI extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold> //</editor-fold>
+        } //</editor-fold>
 
         GUI gui = new GUI();
         gui.setVisible(true);

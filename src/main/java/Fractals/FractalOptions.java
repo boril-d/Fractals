@@ -213,6 +213,8 @@ public class FractalOptions {
         fout.println(z0ToString());
         
         fout.close();
+        
+        defaultBorders();
     }
     public void load(File file) throws FileNotFoundException, NumberFormatException, IllegalArgumentException {
         if (!file.exists()) {
@@ -237,6 +239,8 @@ public class FractalOptions {
             throw err;
         } finally {            
             fin.close();
+            
+            defaultBorders();
         }
     }
     
@@ -248,6 +252,8 @@ public class FractalOptions {
         randomizePower(rng);
         randomizeC(rng);
         randomizeZ0(rng);
+        
+        defaultBorders();
     }
     
     @Override
@@ -258,7 +264,6 @@ public class FractalOptions {
         );
     }
     
-    // ctrl+shift+minus
     //<editor-fold defaultstate="collapsed" desc="helper functions">
     
     public static void ensureValidBound(double bound) throws IllegalArgumentException {
